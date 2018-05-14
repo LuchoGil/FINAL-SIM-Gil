@@ -1,0 +1,484 @@
+<html>
+
+<head>
+
+    <script src="jquery-3.2.1.min.js">
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            //<!-- EnCola (0), EsperandoVuelta (1), EnColaPrioridad (2),Atendido (3)| EstadoServ 1=libre 0=ocupado-->
+
+            var fila1 = [0, 0, 99999, 99999, 99999, 99999, 99999, 99999, 1, 0, 0, 0, 0, 0];
+            var fila2 = [0, 0, 99999, 99999, 99999, 99999, 99999, 99999, 1, 0, 0, 0, 0, 0];
+            var draw = [0, 0, 99999, 99999, 99999, 99999, 99999, 99999, 1, 0, 0, 0, 0, 0];
+            var drawArray = [];
+            var blankArray = [99999, 99999, 99999, 99999, 99999, 99999, 99999, 99999, 99999, 99999, 99999, 99999, 99999, 99999];
+            var cantfila = 0;
+            var contClientes = 0;
+            var columnasComparar = [4, 7];
+            var primero = 0;
+            var urll = window.location.href;
+            var header = "<tr id='hder' class='cabeza'><th>Evento</th><th>Reloj</th><th>RND</th><th>Tiempo</th><th>Proximo</th><th>RND</th><th>Tiempo</th><th>Proximo</th><th>Estado Servidor</th><th>Cola Normal</th><th>Cola Prioridad</th><th>Cantidad Atendidos</th><th>Cant Salida Tardanza</th><th>Cant Salida Exceso</th>"
+            var aftheader = "</tr>";
+            $("#btn1").click(function () {
+                doSimulation();
+            });
+            $("#btn2").click(function () {
+                window.location.href = urll;
+            });
+            $("#btn3").click(function () {
+                window.open("enunciado.html");
+            });
+
+            class Acoplado {
+                constructor(numero, estado, tractor) {
+                    this.numero = numero;
+                    this.estado = estado;
+                    this.tractor = tractor;
+                }
+            }
+
+            class Tractor {
+                constructor(numero, estado, tiempoRestante, acoplado) {
+                    this.numero = numero;
+                    this.estado = estado;
+                    this.tiempoRestante = tiempoRestante;
+                    this.acoplado = acoplado;
+                }
+            }
+
+            class Picadora extends Tractor { //tractor con una picadora              
+
+            }
+
+            class Transportador extends Tractor { //tractor que transportar a la embutidora           
+
+            }
+
+            class Empleado {
+                constructor(numero, estado) {
+                    this.numero = numero;
+                    this.estado = estado;
+                }
+            }
+
+            class Embutidora {
+                constructor(numero, estado) {
+                    this.numero = numero;
+                    this.estado = estado;
+                }
+            }
+
+
+            var acoplado1 = new Acoplado(1, "ocupado", picadora1);
+            var acoplado2 = new Acoplado(2, "ocupado", picadora2);
+            var acoplado3 = new Acoplado(3, "ocupado", transportador1);
+            var acoplado4 = new Acoplado(4, "ocupado", transportador2);
+
+            var picadora1 = new Picadora(1, "recolectando", 3, acoplado1);
+            var picadora2 = new Picadora(1, "recolectando", 5, acoplado2);
+
+            var transportador1 = new Transportador(1, "descargando", 4, acoplado3);
+            var transportador2 = new Transportador(2, "esperando descarga", "-", acoplado4);
+
+            var embutidora1 = new Embutidora(1, "ocupada");
+
+            var acoplados = [acoplado1, acoplado2, acoplado3, acoplado4];
+
+            var colaEmbutidora = [];
+
+
+            function doSimulation() {
+                var minsSimular = $("#minutos").val();
+                var cantidad = $("#filas").val();
+                var desdeMin = $("#desde").val();
+                var reloj = 0;
+                var contador = 0;
+                while (reloj <= minsSimular) {
+                    doIteration();
+                    reloj = fila2[1];
+                    if (reloj > 600) {
+                        fila2 = fila1.slice();
+                        fila2[1] = 600;
+                        fila2[0] = 1;
+                    }
+                    console.log(fila2);
+                    if (reloj >= desdeMin && contador <= cantidad) {
+                        drawIteration();
+                        contador++;
+                    }
+                }
+                drawTable();
+                $("#jose1").text(fila2[11]);
+                $("#jose2").text(fila2[12]);
+                $("#jose3").text(fila2[13]);
+            }
+
+            function doIteration() {
+                fila1 = fila2.slice();
+                if (primero == 0) { firstIteration(); } else {
+                    var nextEvent = getNextEvent();
+                    fila2[0] = nextEvent;
+                    fila2[1] = fila1[nextEvent];
+                    fila2[2] = 99999;
+                    fila2[3] = 99999;
+                    fila2[5] = 99999;
+                    fila2[6] = 99999;
+                    processEvent(nextEvent);
+                }
+                cantfila++;
+            }
+
+            function drawIteration() {
+                draw = fila2.slice();
+                for (i in draw) {
+                    var cambio = false;
+                    if (i == 0) { defineEvent(); cambio = true; }
+                    if (i == 8) { defineEstadoServer(); cambio = true; }
+                    if (i > 14 && !cambio) {
+                        if (draw[i] == 0) { draw[i] = "C"; cambio = true; }
+                        if (draw[i] == 1) { draw[i] = "EV"; cambio = true; }
+                        if (draw[i] == 2) { draw[i] = "CP"; cambio = true; }
+                        if (draw[i] == 3) { draw[i] = "SA"; cambio = true; }
+                    }
+                    if (draw[i] == 99999 && !cambio) { draw[i] = "-----"; cambio = true; }
+                    if (!cambio) { draw[i] = truncateDecimal(draw[i]); }
+                }
+                drawArray.push(draw.slice());
+                //<!-- updateTable(); -->
+            }
+
+            function updateTable() {
+                if (fila1.length != fila2.length) {
+                    $("#hder").append("<th>Proximo C" + contClientes + "</th><th>Estado C" + contClientes + "</th>");
+                }
+                $("#tabla").append("<tr id=fila" + cantfila + "></tr>");
+                for (i in draw) {
+                    $("#fila" + cantfila + "").append("<td>" + draw[i] + "</td>");
+                }
+            }
+
+            function defineEvent() {
+                var event = draw[0];
+                if (event == 0) { draw[0] = "INICIO_SIMULACION"; return 1; }
+                if (event == 1) { draw[0] = "FIN_SIMULACION"; return 1; }
+                if (event == 4) { draw[0] = "LLEGADA_CLIENTE"; return 1; }
+                if (event == 7) { draw[0] = "FIN_ATENCION"; return 1; }
+                if (fila1[event + 1] == 1) { draw[0] = "VUELTA_CLIENTE"; return 1; }
+                if (fila1[event + 1] == 2) { draw[0] = "SEGUNDA_SALIDA_CLIENTE"; return 1; }
+                if (fila1[event + 1] == 0) { draw[0] = "SALIDA_CLIENTE"; return 1; }
+            }
+
+            function defineEstadoServer() {
+                if (draw[8] == 0) { draw[8] = "OCUPADO"; return 1; }
+                draw[8] = "LIBRE";
+            }
+
+            function truncateDecimal(numero) {
+                var with2Decimals = numero.toString().match(/^-?\d+(?:\.\d{0,2})?/)[0]
+                return with2Decimals;
+            }
+
+
+            function firstIteration() {
+                var rnd = Math.random();
+                var tiempo = genTiempoLlegada(rnd);
+                var proximo = tiempo + fila1[1];
+                fila2[2] = rnd;
+                fila2[3] = tiempo;
+                fila2[4] = proximo;
+                primero = 1;
+            }
+
+            function getNextEvent() {
+                var nextEvent = 0;
+                var minClock = 9999999;
+                for (i in columnasComparar) {
+                    if (fila1[columnasComparar[i]] < minClock) { nextEvent = columnasComparar[i]; minClock = fila1[columnasComparar[i]]; }
+                }
+                return nextEvent;
+            }
+
+            function processEvent(next) {
+                if (next == 4) {
+                    doNuevaLlegada();
+                    return 1;
+                }
+                if (next == 7) {
+                    doNuevoFin();
+                    return 1;
+                }
+                if (fila1[next + 1] == 0) {
+                    doSalidaCliente(next);
+                    return 1;
+                }
+                if (fila1[next + 1] == 1) {
+                    doRegresoCliente(next);
+                    return 1;
+                }
+                if (fila1[next + 1] == 2) {
+                    doFinCliente(next);
+                    return 1;
+                }
+            }
+
+            function doNuevaLlegada() {
+                contClientes++;
+                var rnd = Math.random();
+                var tiempo = genTiempoLlegada(rnd);
+                var proximo = tiempo + fila2[1];
+                fila2[2] = rnd;
+                fila2[3] = tiempo;
+                fila2[4] = proximo;
+                if (colasLlenas()) {
+                    fila2[13]++;
+                } else {
+                    fila2[fila2.length] = fila2[1] + 20;
+                    fila2[fila2.length] = 0;
+                    columnasComparar[columnasComparar.length] = fila2.length - 2;
+                    if (fila1[8] == 1) { doNuevoEventoFin(); } else { fila2[9]++; }
+                    header = header.concat("<th>Proximo C" + contClientes + "</th><th>Estado C" + contClientes + "</th>");
+                }
+            }
+
+            function doNuevoFin() {
+                fila2[11]++;
+                finalizarUltimaAtencion();
+                if (colasVacias()) {
+                    fila2[8] = 1;
+                    fila2[7] = 99999;
+                } else {
+                    var rnd = Math.random();
+                    var tiempo = genTiempoFin(rnd);
+                    var proximo = tiempo + fila2[1];
+                    fila2[5] = rnd;
+                    fila2[6] = tiempo;
+                    fila2[7] = proximo;
+                    if (fila2[10] > 0) {
+                        fila2[10]--;
+                        atenderCP();
+                    } else {
+                        fila2[9]--;
+                        atenderC();
+                    }
+                }
+            }
+
+            function doSalidaCliente(next) {
+                fila2[9]--;
+                fila2[next] = fila2[next] + 60;
+                fila2[next + 1] = 1;
+            }
+
+            function doRegresoCliente(next) {
+                if (colasLlenas()) {
+                    fila2[13]++;
+                    fila2[next] = 99999;
+                    fila2[next + 1] = 99999;
+                } else {
+                    fila2[next] = fila2[1] + 20;
+                    fila2[next + 1] = 2;
+                    if (fila1[8] == 1) { doNuevoEventoFin(); } else { fila2[10]++; }
+                }
+            }
+
+            function doFinCliente(next) {
+                fila2[12]++;
+                fila2[next] = 99999;
+                fila2[next + 1] = 99999;
+                fila2[10]--;
+            }
+
+            function finalizarUltimaAtencion() {
+                var pivot = 15;
+                while (fila2[pivot] != 3) {
+                    pivot += 2;
+                }
+                fila2[pivot] = 99999;
+            }
+
+            function atenderCP() {
+                var pivot = 15;
+                while (fila2[pivot] != 2) {
+                    pivot += 2;
+                }
+                fila2[pivot] = 3;
+                fila2[pivot - 1] = 99999;
+            }
+
+            function atenderC() {
+                var pivot = 15;
+                while (fila2[pivot] != 0) {
+                    pivot += 2;
+                }
+                fila2[pivot] = 3;
+                fila2[pivot - 1] = 99999;
+            }
+
+            function doNuevoEventoFin() {
+                //<!-- usar esto implica que ultimo cliente es el q hay q tocar -->
+                var rnd = Math.random();
+                var tiempo = genTiempoFin(rnd);
+                var proximo = tiempo + fila2[1];
+                fila2[5] = rnd;
+                fila2[6] = tiempo;
+                fila2[7] = proximo;
+                fila2[8] = 0;
+                fila2[fila2.length - 2] = 99999;
+                fila2[fila2.length - 1] = 3;
+            }
+
+            function colasLlenas() {
+                var suma = fila1[9] + fila1[10];
+                if (suma >= 10) { return true; } else { return false; }
+            }
+
+            function colasVacias() {
+                var suma = fila1[9] + fila1[10];
+                if (suma == 0) { return true; } else { return false; }
+            }
+            //GENERADORES DE TIMPOS
+            function genTiempoLlenadaAcoplado(rnd) { //exponencial negativa -9 - llenar el acoplado de maiz
+                var median = -9;
+                var dentrolog = 1 - rnd;
+                var valor = median * Math.log(dentrolog);
+                return valor;
+            }
+
+            function genTiempoFinEmbutir(rnd) { //uniforme  media 4.5 min con desviacion 0.5 min
+                var tiempo = 4.5 + (rnd * 0.5);
+                return tiempo;
+            }
+
+            function contains(x, ar) {
+                console.log("Entre a contain");
+                for (i in ar) {
+                    if (x == ar[i]) { return true; }
+                }
+                return false;
+            }
+
+            function drawTable() {
+                var conTabla = "";
+                header = header.concat(aftheader);
+                conTabla = conTabla.concat(header); //concatena una nueva fila
+                for (i in drawArray) {
+                    conTabla = conTabla.concat("<tr>");
+                    for (j in drawArray[i]) {
+                        conTabla = conTabla.concat("<td>" + drawArray[i][j] + "</td>");
+                    }
+                    conTabla = conTabla.concat("</tr>");
+                }
+                $("#tabla").append(conTabla);
+                console.log(conTabla);
+                console.log("FIN DRAW");
+            }
+
+
+        });
+    </script>
+
+    <style>
+        table {
+            border-collapse: collapse;
+        }
+
+        table,
+        th,
+        td {
+            border: 1px solid black;
+            text-align: center;
+            vertical-align: center;
+        }
+
+        th,
+        td {
+            padding: 5px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2
+        }
+
+        #box1 {
+            float: left;
+            width: 25%;
+            padding: 20px;
+        }
+
+        #box2 {
+            float: left;
+            width: 25%;
+            padding: 20px;
+        }
+
+        #tabla {
+            width: 100%;
+        }
+
+        .btn {
+            padding: 5px;
+            margin: 4px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="box1">
+        <form>
+            Minutos a simular:
+            <br>
+            <input type="text" id="minutos" value="600">
+            <br> Cantidad de filas a mostrar:
+            <br>
+            <input type="text" id="filas" value="100">
+            <br> A partir de minuto:
+            <br>
+            <input type="text" id="desde" value="0">
+            <br>
+        </form>
+    </div>
+
+    <div id="box2">
+        <br> Clientes Atendidos:
+        <b id="jose1"></b>
+        <br> Clientes perdidos por tardanza:
+        <b id="jose2"></b>
+        <br> Clientes perdidos por exceso:
+        <b id="jose3"></b>
+        <br>
+    </div>
+
+
+    <button type="button" class="btn" id="btn1">Simular</button>
+    <br>
+    <button type="button" class="btn" id="btn2">Reiniciar</button>
+    <br>
+    <button type="button" class="btn" id="btn3">Ver Enunciado</button>
+    <br>
+    <div style="height: 750px; overflow-y: auto; width:100%;">
+        <table id="tabla" class="table table-hover table-mc-light-blue">
+            <!-- <tr id="hder"> -->
+            <!-- <th>Evento</th> -->
+            <!-- <th>Reloj</th> -->
+            <!-- <th>RND</th> -->
+            <!-- <th>Tiempo</th> -->
+            <!-- <th>Proximo</th> -->
+            <!-- <th>RND</th> -->
+            <!-- <th>Tiempo</th> -->
+            <!-- <th>Proximo</th> -->
+            <!-- <th>Estado Servidor</th> -->
+            <!-- <th>Cola Normal</th> -->
+            <!-- <th>Cola Prioridad</th> -->
+            <!-- <th>Cantidad Atendidos</th> -->
+            <!-- <th>Cant Salida Tardanza</th> -->
+            <!-- <th>Cant Salida Exceso</th> -->
+            <!--  -->
+        </table>
+    </div>
+
+
+</body>
+
+</html>
