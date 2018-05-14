@@ -89,6 +89,7 @@
             var colaEmbutidora = [];
 
 
+            //FUNCIONES
             function doSimulation() {
                 var minsSimular = $("#minutos").val();
                 var cantidad = $("#filas").val();
@@ -317,7 +318,7 @@
             }
 
             function doNuevoEventoFin() {
-                //<!-- usar esto implica que ultimo cliente es el q hay q tocar -->
+                //usar esto implica que ultimo cliente es el q hay q tocar
                 var rnd = Math.random();
                 var tiempo = genTiempoFin(rnd);
                 var proximo = tiempo + fila2[1];
@@ -338,6 +339,7 @@
                 var suma = fila1[9] + fila1[10];
                 if (suma == 0) { return true; } else { return false; }
             }
+            
             //GENERADORES DE TIMPOS
             function genTiempoLlenadaAcoplado(rnd) { //exponencial negativa -9 - llenar el acoplado de maiz
                 var median = -9;
@@ -374,8 +376,6 @@
                 console.log(conTabla);
                 console.log("FIN DRAW");
             }
-
-
         });
     </script>
 
@@ -475,9 +475,8 @@
             <!-- <th>Cant Salida Tardanza</th> -->
             <!-- <th>Cant Salida Exceso</th> -->
             <!--  -->
-        </table>
-    </div>
-
+        </table>        
+    </div>  
 
 </body>
 
