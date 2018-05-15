@@ -73,13 +73,13 @@
             var reloj = 0;
             
             var fila1 = [0, 0, 99999, 99999, 99999, 99999, 99999, 99999, 1, 0, 0, 0, 0, 0];
-            var fila2 = [0, reloj,"-", "-", 3, picadora1.estado, picadora1.tiempoRestante, picadora2.estado, picadora2.tiempoRestante, acoplado1.estado, acoplado2.estado, acoplado3.estado, acoplado4.estado, colaEnganche.length, colaDesenganche.length, empleado1.estado, "-", "-", "-", "-", transportador1.estado, transportador1.tiempoRestante, transportador2.estado,transportador2.tiempoRestante, colaEmbutidora.length, embutidora1.estado, contadorEmbutidos]; //Array primera iteracion;
+            var fila2 = [0, reloj,"-", "-", 3, picadora1.estado, picadora1.tiempoRestante, picadora2.estado, picadora2.tiempoRestante, acoplado1.estado, acoplado2.estado, acoplado3.estado, acoplado4.estado, colaEnganche.length, colaDesenganche.length, empleado1.estado, "-", "-", "-", "-", "-", transportador1.estado, transportador1.tiempoRestante, transportador2.estado,transportador2.tiempoRestante, colaEmbutidora.length, embutidora1.estado, contadorEmbutidos]; //Array primera iteracion;
             var draw = [0, 0, 99999, 99999, 99999, 99999, 99999, 99999, 1, 0, 0, 0, 0, 0];
             var drawArray = [];
             var blankArray = [99999, 99999, 99999, 99999, 99999, 99999, 99999, 99999, 99999, 99999, 99999, 99999, 99999, 99999];
             var cantfila = 0;
             var contClientes = 0;
-            var columnasComparar = [4, 7];
+            var columnasComparar = [4, 16, 17, 20]; //4 fin prox llenada de acoplado - 16 fin enganche prox - 17 fin desenganche proximo - 20 fin descarga en embutidora
             var primero = 0;
             var urll = window.location.href;
             var header = "<tr id='hder' class='cabeza'><th>Evento</th><th>Reloj</th><th>RND</th><th>Tiempo</th><th>Proximo</th><th>RND</th><th>Tiempo</th><th>Proximo</th><th>Estado Servidor</th><th>Cola Normal</th><th>Cola Prioridad</th><th>Cantidad Atendidos</th><th>Cant Salida Tardanza</th><th>Cant Salida Exceso</th>"
@@ -124,6 +124,8 @@
             }
 
             function doIteration() {
+                if(primero == 0){firstIteration();}
+                else{
                 fila1 = fila2.slice();                
                     var nextEvent = getNextEvent();
                     fila2[0] = nextEvent;
@@ -132,28 +134,29 @@
                     fila2[3] = 99999;
                     fila2[5] = 99999;
                     fila2[6] = 99999;
-                    processEvent(nextEvent);                
+                    processEvent(nextEvent);  
+                }              
                 cantfila++;
             }
 
             function drawIteration() {
-                draw = fila2.slice();
+                draw = fila2.slice();                               
                 for (i in draw) {
                     var cambio = false;
                     if (i == 0) { defineEvent(); cambio = true; }
-                    if (i == 8) { defineEstadoServer(); cambio = true; }
-                    if (i > 14 && !cambio) {
-                        if (draw[i] == 0) { draw[i] = "C"; cambio = true; }
-                        if (draw[i] == 1) { draw[i] = "EV"; cambio = true; }
-                        if (draw[i] == 2) { draw[i] = "CP"; cambio = true; }
-                        if (draw[i] == 3) { draw[i] = "SA"; cambio = true; }
-                    }
-                    if (draw[i] == 99999 && !cambio) { draw[i] = "-----"; cambio = true; }
-                    if (!cambio) { draw[i] = truncateDecimal(draw[i]); }
+                    //todas las definiciones necesarias a considerar en el array                    
+                    //if (i == 8) { defineEstadoServer(); cambio = true; }
+                    //if (i > 14 && !cambio) {
+                        //if (draw[i] == 0) { draw[i] = "C"; cambio = true; }
+                        //if (draw[i] == 1) { draw[i] = "EV"; cambio = true; }
+                        //if (draw[i] == 2) { draw[i] = "CP"; cambio = true; }
+                        //if (draw[i] == 3) { draw[i] = "SA"; cambio = true; }
+                    }                    //if (draw[i] == 99999 && !cambio) { draw[i] = "-----"; cambio = true; }
+                    //if (!cambio) { draw[i] = truncateDecimal(draw[i]); }
                 }
                 drawArray.push(draw.slice());
                 //<!-- updateTable(); -->
-            }
+                            
 
             function updateTable() {
                 if (fila1.length != fila2.length) {
@@ -167,18 +170,17 @@
 
             function defineEvent() {
                 var event = draw[0];
-                if (event == 0) { draw[0] = "INICIO_SIMULACION"; return 1; }
-                if (event == 1) { draw[0] = "FIN_SIMULACION"; return 1; }
-                if (event == 4) { draw[0] = "LLEGADA_CLIENTE"; return 1; }
-                if (event == 7) { draw[0] = "FIN_ATENCION"; return 1; }
-                if (fila1[event + 1] == 1) { draw[0] = "VUELTA_CLIENTE"; return 1; }
-                if (fila1[event + 1] == 2) { draw[0] = "SEGUNDA_SALIDA_CLIENTE"; return 1; }
-                if (fila1[event + 1] == 0) { draw[0] = "SALIDA_CLIENTE"; return 1; }
+                if (event == 0) { draw[0] = "Inicio Simulación "; return 1; }
+                if (event == 1) { draw[0] = "Fin Simulación"; return 1; }
+                if (event == 4) { draw[0] = "Fian Llenada de Acoplado"; return 1; }
+                if (event == 16) { draw[0] = "Fin Enganche Acoplado"; return 1; }
+                if (event == 17) { draw[0] = "Fin Desenganche Acoplado"; return 1; }
+                if (event == 20) { draw[0] = "Fin Descarga"; return 1; }               
             }
 
             function defineEstadoServer() {
                 if (draw[8] == 0) { draw[8] = "OCUPADO"; return 1; }
-                draw[8] = "LIBRE";
+                else { draw[8] = "LIBRE";};
             }
 
             function truncateDecimal(numero) {
@@ -188,14 +190,6 @@
 
 
             function firstIteration() {
-
-                var rnd = Math.random();
-                var tiempo = genTiempoLlegada(rnd);
-                var proximo = tiempo + fila1[1];
-                fila2[2] = rnd;
-                fila2[3] = tiempo;
-                fila2[4] = proximo;
-                primero = 1;
             }
 
             function getNextEvent() {
@@ -209,28 +203,24 @@
 
             function processEvent(next) {
                 if (next == 4) {
-                    doNuevaLlegada();
+                    doNuevaLlenada();
                     return 1;
                 }
-                if (next == 7) {
-                    doNuevoFin();
+                if (next == 16) {
+                    doNuevoEnganche();
                     return 1;
                 }
-                if (fila1[next + 1] == 0) {
-                    doSalidaCliente(next);
+                if (fila1[next + 17] == 0) {
+                    doNuevoDesenganche(next);
                     return 1;
                 }
-                if (fila1[next + 1] == 1) {
-                    doRegresoCliente(next);
+                if (fila1[next + 20] == 1) {
+                    doNuevaDescarga(next);
                     return 1;
-                }
-                if (fila1[next + 1] == 2) {
-                    doFinCliente(next);
-                    return 1;
-                }
+                }                
             }
 
-            function doNuevaLlegada() {
+            function doNuevaLlenada() {
                 contClientes++;
                 var rnd = Math.random();
                 var tiempo = genTiempoLlegada(rnd);
@@ -249,7 +239,7 @@
                 }
             }
 
-            function doNuevoFin() {
+            function doNuevoEnganche() {
                 fila2[11]++;
                 finalizarUltimaAtencion();
                 if (colasVacias()) {
@@ -272,7 +262,7 @@
                 }
             }
 
-            function doSalidaCliente(next) {
+            function doNuevoDesenganche(next) {
                 fila2[9]--;
                 fila2[next] = fila2[next] + 60;
                 fila2[next + 1] = 1;
