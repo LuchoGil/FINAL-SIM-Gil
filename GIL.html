@@ -2,35 +2,14 @@
 
 <head>
 
-    <script src="jquery-3.2.1.min.js">
+    <script src="jquery-3.3.1.min.js">
     </script>
 
     <script>
         $(document).ready(function () {
-            //<!-- EnCola (0), EsperandoVuelta (1), EnColaPrioridad (2),Atendido (3)| EstadoServ 1=libre 0=ocupado-->
 
-            var fila1 = [0, 0, 99999, 99999, 99999, 99999, 99999, 99999, 1, 0, 0, 0, 0, 0];
-            var fila2 = [0, 0, 99999, 99999, 99999, 99999, 99999, 99999, 1, 0, 0, 0, 0, 0];
-            var draw = [0, 0, 99999, 99999, 99999, 99999, 99999, 99999, 1, 0, 0, 0, 0, 0];
-            var drawArray = [];
-            var blankArray = [99999, 99999, 99999, 99999, 99999, 99999, 99999, 99999, 99999, 99999, 99999, 99999, 99999, 99999];
-            var cantfila = 0;
-            var contClientes = 0;
-            var columnasComparar = [4, 7];
-            var primero = 0;
-            var urll = window.location.href;
-            var header = "<tr id='hder' class='cabeza'><th>Evento</th><th>Reloj</th><th>RND</th><th>Tiempo</th><th>Proximo</th><th>RND</th><th>Tiempo</th><th>Proximo</th><th>Estado Servidor</th><th>Cola Normal</th><th>Cola Prioridad</th><th>Cantidad Atendidos</th><th>Cant Salida Tardanza</th><th>Cant Salida Exceso</th>"
-            var aftheader = "</tr>";
-            $("#btn1").click(function () {
-                doSimulation();
-            });
-            $("#btn2").click(function () {
-                window.location.href = urll;
-            });
-            $("#btn3").click(function () {
-                window.open("enunciado.html");
-            });
-
+                        //Clases y variables globales
+            
             class Acoplado {
                 constructor(numero, estado, tractor) {
                     this.numero = numero;
@@ -71,22 +50,52 @@
             }
 
 
-            var acoplado1 = new Acoplado(1, "ocupado", picadora1);
-            var acoplado2 = new Acoplado(2, "ocupado", picadora2);
-            var acoplado3 = new Acoplado(3, "ocupado", transportador1);
-            var acoplado4 = new Acoplado(4, "ocupado", transportador2);
+            var acoplado1 = new Acoplado(1, "Recolectando", picadora1);
+            var acoplado2 = new Acoplado(2, "Recolectando", picadora2);
+            var acoplado3 = new Acoplado(3, "Lleno", transportador1);
+            var acoplado4 = new Acoplado(4, "Lleno", transportador2);
 
-            var picadora1 = new Picadora(1, "recolectando", 3, acoplado1);
-            var picadora2 = new Picadora(1, "recolectando", 5, acoplado2);
+            var picadora1 = new Picadora(1, "Recolectando", 3, acoplado1);
+            var picadora2 = new Picadora(1, "Recolectando", 5, acoplado2);
 
             var transportador1 = new Transportador(1, "descargando", 4, acoplado3);
             var transportador2 = new Transportador(2, "esperando descarga", "-", acoplado4);
 
             var embutidora1 = new Embutidora(1, "ocupada");
 
-            var acoplados = [acoplado1, acoplado2, acoplado3, acoplado4];
+            var empleado1 = new Empleado(1,"libre");
 
-            var colaEmbutidora = [];
+            var acoplados = [acoplado1, acoplado2, acoplado3, acoplado4];
+            var colaEmbutidora = [transportador2];
+            var colaEnganche = [];
+            var colaDesenganche = [];
+            var contadorEmbutidos = 0;
+            var reloj = 0;
+            
+            var fila1 = [0, 0, 99999, 99999, 99999, 99999, 99999, 99999, 1, 0, 0, 0, 0, 0];
+            var fila2 = [0, reloj,"-", "-", 3, picadora1.estado, picadora1.tiempoRestante, picadora2.estado, picadora2.tiempoRestante, acoplado1.estado, acoplado2.estado, acoplado3.estado, acoplado4.estado, colaEnganche.length, colaDesenganche.length, empleado1.estado, "-", "-", "-", "-", transportador1.estado, transportador1.tiempoRestante, transportador2.estado,transportador2.tiempoRestante, colaEmbutidora.length, embutidora1.estado, contadorEmbutidos]; //Array primera iteracion;
+            var draw = [0, 0, 99999, 99999, 99999, 99999, 99999, 99999, 1, 0, 0, 0, 0, 0];
+            var drawArray = [];
+            var blankArray = [99999, 99999, 99999, 99999, 99999, 99999, 99999, 99999, 99999, 99999, 99999, 99999, 99999, 99999];
+            var cantfila = 0;
+            var contClientes = 0;
+            var columnasComparar = [4, 7];
+            var primero = 0;
+            var urll = window.location.href;
+            var header = "<tr id='hder' class='cabeza'><th>Evento</th><th>Reloj</th><th>RND</th><th>Tiempo</th><th>Proximo</th><th>RND</th><th>Tiempo</th><th>Proximo</th><th>Estado Servidor</th><th>Cola Normal</th><th>Cola Prioridad</th><th>Cantidad Atendidos</th><th>Cant Salida Tardanza</th><th>Cant Salida Exceso</th>"
+            var aftheader = "</tr>";
+            $("#btn1").click(function () {
+                doSimulation();
+            });
+            $("#btn2").click(function () {
+                window.location.href = urll;
+            });
+            $("#btn3").click(function () {
+                window.open("enunciado.html");
+            });
+
+            
+
 
 
             //FUNCIONES
@@ -96,6 +105,7 @@
                 var desdeMin = $("#desde").val();
                 var reloj = 0;
                 var contador = 0;
+
                 while (reloj <= minsSimular) {
                     doIteration();
                     reloj = fila2[1];
@@ -117,8 +127,7 @@
             }
 
             function doIteration() {
-                fila1 = fila2.slice();
-                if (primero == 0) { firstIteration(); } else {
+                fila1 = fila2.slice();                
                     var nextEvent = getNextEvent();
                     fila2[0] = nextEvent;
                     fila2[1] = fila1[nextEvent];
@@ -126,8 +135,7 @@
                     fila2[3] = 99999;
                     fila2[5] = 99999;
                     fila2[6] = 99999;
-                    processEvent(nextEvent);
-                }
+                    processEvent(nextEvent);                
                 cantfila++;
             }
 
@@ -183,6 +191,7 @@
 
 
             function firstIteration() {
+
                 var rnd = Math.random();
                 var tiempo = genTiempoLlegada(rnd);
                 var proximo = tiempo + fila1[1];
@@ -339,16 +348,16 @@
                 var suma = fila1[9] + fila1[10];
                 if (suma == 0) { return true; } else { return false; }
             }
-            
+
             //GENERADORES DE TIMPOS
-            function genTiempoLlenadaAcoplado(rnd) { //exponencial negativa -9 - llenar el acoplado de maiz
+            function genTiempoLlenadaAcoplado(rnd) { //exponencial negativa -9 (llenar el acoplado de maiz)
                 var median = -9;
                 var dentrolog = 1 - rnd;
                 var valor = median * Math.log(dentrolog);
                 return valor;
             }
 
-            function genTiempoFinEmbutir(rnd) { //uniforme  media 4.5 min con desviacion 0.5 min
+            function genTiempoFinEmbutir(rnd) { //uniforme  media 4.5 min con desviacion 0.5 min (descargar en embutidora)
                 var tiempo = 4.5 + (rnd * 0.5);
                 return tiempo;
             }
@@ -475,8 +484,8 @@
             <!-- <th>Cant Salida Tardanza</th> -->
             <!-- <th>Cant Salida Exceso</th> -->
             <!--  -->
-        </table>        
-    </div>  
+        </table>
+    </div>
 
 </body>
 
