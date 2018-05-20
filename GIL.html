@@ -8,8 +8,8 @@
     <script>
         $(document).ready(function () {
 
-                        //Clases y variables globales
-            
+            //Clases y variables globales
+
             class Acoplado {
                 constructor(numero, estado, tractor) {
                     this.numero = numero;
@@ -55,25 +55,31 @@
             var acoplado3 = new Acoplado(3, "Lleno", transportador1);
             var acoplado4 = new Acoplado(4, "Lleno", transportador2);
 
+            var acoplados = [acoplado1, acoplado2, acoplado3, acoplado4];
+            
             var picadora1 = new Picadora(1, "Recolectando", 3, acoplado1);
             var picadora2 = new Picadora(1, "Recolectando", 5, acoplado2);
+
+            var picadoras = [picadora1, picadora2]
 
             var transportador1 = new Transportador(1, "descargando", 4, acoplado3);
             var transportador2 = new Transportador(2, "esperando descarga", "-", acoplado4);
 
+            var transportadores = [transportador1, transportador2];
+
             var embutidora1 = new Embutidora(1, "ocupada");
 
-            var empleado1 = new Empleado(1,"libre");
+            var empleado1 = new Empleado(1, "libre");
 
-            var acoplados = [acoplado1, acoplado2, acoplado3, acoplado4];
+            
             var colaEmbutidora = [transportador2];
             var colaEnganche = [];
             var colaDesenganche = [];
             var contadorEmbutidos = 0;
             var reloj = 0;
-            
+
             var fila1 = [0, 0, 99999, 99999, 99999, 99999, 99999, 99999, 1, 0, 0, 0, 0, 0];
-            var arrayToDraw = [0, reloj,"-", "-", 3, picadora1.estado, picadora1.tiempoRestante, picadora2.estado, picadora2.tiempoRestante, acoplado1.estado, acoplado2.estado, acoplado3.estado, acoplado4.estado, colaEnganche.length, colaDesenganche.length, empleado1.estado, "-", "-", "-", "-", "-", transportador1.estado, transportador1.tiempoRestante, transportador2.estado,transportador2.tiempoRestante, colaEmbutidora.length, embutidora1.estado, contadorEmbutidos]; //Array primera iteracion 28 columnas
+            var arrayToDraw = [0, reloj, "-", "-", 3, picadora1.estado, picadora1.tiempoRestante, picadora2.estado, picadora2.tiempoRestante, acoplado1.estado, acoplado2.estado, acoplado3.estado, acoplado4.estado, colaEnganche.length, colaDesenganche.length, empleado1.estado, "-", "-", "-", "-", "-", transportador1.estado, transportador1.tiempoRestante, transportador2.estado, transportador2.tiempoRestante, colaEmbutidora.length, embutidora1.estado, contadorEmbutidos]; //Array primera iteracion 28 columnas
             var draw = [0, 0, 99999, 99999, 99999, 99999, 99999, 99999, 1, 0, 0, 0, 0, 0];
             var drawArray = []; //Array a ser mostrado, es un array de arrays
             var blankArray = [99999, 99999, 99999, 99999, 99999, 99999, 99999, 99999, 99999, 99999, 99999, 99999, 99999, 99999];
@@ -93,14 +99,14 @@
             });
             $("#btn3").click(function () {
                 window.open("enunciado.html");
-            });       
+            });
 
 
             //FUNCIONES
             function doSimulation() {
                 var minsSimular = $("#minutos").val();
                 var cantidad = $("#filas").val();
-                var desdeMin = $("#desde").val();                
+                var desdeMin = $("#desde").val();
                 var contador = 0; //contador de filas
 
                 while (reloj <= minsSimular) {
@@ -109,7 +115,7 @@
                     if (reloj > 600) {
                         arrayToDraw = fila1.slice()
                         arrayToDraw[0] = 1;
-                        arrayToDraw[1] = 600;                        
+                        arrayToDraw[1] = 600;
                     }
                     console.log(arrayToDraw);
                     if (reloj >= desdeMin && contador <= cantidad) {
@@ -124,46 +130,46 @@
             }
 
             function doIteration() {
-                if(reloj == 0){}
-                else{
-                    fila1 = arrayToDraw.slice();                
+                if (reloj == 0) { }
+                else {
+                    fila1 = arrayToDraw.slice();
                     var nextEvent = getNextEvent();
                     arrayToDraw[0] = nextEvent;
                     arrayToDraw[1] = fila1[nextEvent]; //Reloj de proximo evento que va a ser dibujado
-                    arrayToDraw[2] = 99999;
-                    arrayToDraw[3] = 99999;
-                    arrayToDraw[5] = 99999;
-                    arrayToDraw[6] = 99999;
-                    processEvent(nextEvent);  
-                }              
+                    //arrayToDraw[2] = 99999;
+                    //arrayToDraw[3] = 99999;
+                    //arrayToDraw[5] = 99999;
+                    //arrayToDraw[6] = 99999;
+                    processEvent(nextEvent);
+                }
                 cantfila++;
             }
 
             function drawIteration() {
                 draw = arrayToDraw.slice();   //draw es el array que se va a dibujar                            
-                for (i in draw) { 
-                    switch(i){ // Cambiar if por switch
-                        case 0 : defineEvent(); cambio = true; break; //Nombre del evento que ocurre
-                        case 1 : ; // deberia llegarle el reloj o ya estar definido de antes
-                        case 2 : ; //
-                        case 3 : ; 
-                        case 4 : ;
-                        case 5 : ; 
-                        case 6 : ;
-                        case 7 : ; 
-                        case 8 : ;
-                        case 9 : ; 
-                        case 10 : ;
-                        case 11 : ; 
-                        case 12 : ;
-                        case 13 : ; 
-                        case 14 : ;
-                        case 15 : ; 
-                        case 16 : ;
-                        case 17 : ; 
-                        case 18 : ;
-                        case 19 : ;
-                        case 28 : ;
+                for (i in draw) {
+                    switch (i) { // Cambiar if por switch
+                        case 0: defineEvent(); cambio = true; break; //Nombre del evento que ocurre
+                        case 1: ; // deberia llegarle el reloj o ya estar definido de antes
+                        case 2: ; //
+                        case 3: ;
+                        case 4: ;
+                        case 5: ;
+                        case 6: ;
+                        case 7: ;
+                        case 8: ;
+                        case 9: ;
+                        case 10: ;
+                        case 11: ;
+                        case 12: ;
+                        case 13: ;
+                        case 14: ;
+                        case 15: ;
+                        case 16: ;
+                        case 17: ;
+                        case 18: ;
+                        case 19: ;
+                        case 28: ;
 
                     }
                     var cambio = false;
@@ -171,15 +177,16 @@
                     //todas las definiciones necesarias a considerar en el array                    
                     //if (i == 8) { defineEstadoServer(); cambio = true; }
                     //if (i > 14 && !cambio) {
-                        //if (draw[i] == 0) { draw[i] = "C"; cambio = true; }
-                        //if (draw[i] == 1) { draw[i] = "EV"; cambio = true; }
-                        //if (draw[i] == 2) { draw[i] = "CP"; cambio = true; }
-                        //if (draw[i] == 3) { draw[i] = "SA"; cambio = true; }
-                    }                    //if (draw[i] == 99999 && !cambio) { draw[i] = "-----"; cambio = true; }
-                    //if (!cambio) { draw[i] = truncateDecimal(draw[i]); }
-                }
+                    //if (draw[i] == 0) { draw[i] = "C"; cambio = true; }
+                    //if (draw[i] == 1) { draw[i] = "EV"; cambio = true; }
+                    //if (draw[i] == 2) { draw[i] = "CP"; cambio = true; }
+                    //if (draw[i] == 3) { draw[i] = "SA"; cambio = true; }
+                }                    //if (draw[i] == 99999 && !cambio) { draw[i] = "-----"; cambio = true; }
+                //if (!cambio) { draw[i] = truncateDecimal(draw[i]); }
                 drawArray.push(draw.slice());
                 //<!-- updateTable(); -->
+            }
+
 
 
             function updateTable() {
@@ -199,12 +206,12 @@
                 if (event == 4) { draw[0] = "Fian Llenada de Acoplado"; return 1; }
                 if (event == 16) { draw[0] = "Fin Enganche Acoplado"; return 1; }
                 if (event == 17) { draw[0] = "Fin Desenganche Acoplado"; return 1; }
-                if (event == 20) { draw[0] = "Fin Descarga"; return 1; }               
+                if (event == 20) { draw[0] = "Fin Descarga"; return 1; }
             }
 
             function defineEstadoServer() {
                 if (draw[8] == 0) { draw[8] = "OCUPADO"; return 1; }
-                else { draw[8] = "LIBRE";};
+                else { draw[8] = "LIBRE"; };
             }
 
             function truncateDecimal(numero) {
@@ -241,26 +248,17 @@
                 if (fila1[next + 20] == 1) {
                     doNuevaDescarga(next);
                     return 1;
-                }                
+                }
             }
 
             function doNuevaLlenada() {
-                contClientes++;
                 var rnd = Math.random();
-                var tiempo = genTiempoLlegada(rnd);
+                var tiempo = genTiempoLlenadaAcoplado(rnd);
                 var proximo = tiempo + arrayToDraw[1];
                 arrayToDraw[2] = rnd;
                 arrayToDraw[3] = tiempo;
                 arrayToDraw[4] = proximo;
-                if (colasLlenas()) {
-                    arrayToDraw[13]++;
-                } else {
-                    arrayToDraw[arrayToDraw.length] = arrayToDraw[1] + 20;
-                    arrayToDraw[arrayToDraw.length] = 0;
-                    columnasComparar[columnasComparar.length] = arrayToDraw.length - 2;
-                    if (fila1[8] == 1) { doNuevoEventoFin(); } else { arrayToDraw[9]++; }
-                    header = header.concat("<th>Proximo C" + contClientes + "</th><th>Estado C" + contClientes + "</th>");
-                }
+
             }
 
             function doNuevoEnganche() {
