@@ -73,9 +73,9 @@
             var reloj = 0;
             
             var fila1 = [0, 0, 99999, 99999, 99999, 99999, 99999, 99999, 1, 0, 0, 0, 0, 0];
-            var fila2 = [0, reloj,"-", "-", 3, picadora1.estado, picadora1.tiempoRestante, picadora2.estado, picadora2.tiempoRestante, acoplado1.estado, acoplado2.estado, acoplado3.estado, acoplado4.estado, colaEnganche.length, colaDesenganche.length, empleado1.estado, "-", "-", "-", "-", "-", transportador1.estado, transportador1.tiempoRestante, transportador2.estado,transportador2.tiempoRestante, colaEmbutidora.length, embutidora1.estado, contadorEmbutidos]; //Array primera iteracion;
+            var arrayToDraw = [0, reloj,"-", "-", 3, picadora1.estado, picadora1.tiempoRestante, picadora2.estado, picadora2.tiempoRestante, acoplado1.estado, acoplado2.estado, acoplado3.estado, acoplado4.estado, colaEnganche.length, colaDesenganche.length, empleado1.estado, "-", "-", "-", "-", "-", transportador1.estado, transportador1.tiempoRestante, transportador2.estado,transportador2.tiempoRestante, colaEmbutidora.length, embutidora1.estado, contadorEmbutidos]; //Array primera iteracion 28 columnas
             var draw = [0, 0, 99999, 99999, 99999, 99999, 99999, 99999, 1, 0, 0, 0, 0, 0];
-            var drawArray = [];
+            var drawArray = []; //Array a ser mostrado, es un array de arrays
             var blankArray = [99999, 99999, 99999, 99999, 99999, 99999, 99999, 99999, 99999, 99999, 99999, 99999, 99999, 99999];
             var cantfila = 0;
             var contClientes = 0;
@@ -84,6 +84,7 @@
             var urll = window.location.href;
             var header = "<tr id='hder' class='cabeza'><th>Evento</th><th>Reloj</th><th>RND</th><th>Tiempo</th><th>Proximo</th><th>RND</th><th>Tiempo</th><th>Proximo</th><th>Estado Servidor</th><th>Cola Normal</th><th>Cola Prioridad</th><th>Cantidad Atendidos</th><th>Cant Salida Tardanza</th><th>Cant Salida Exceso</th>"
             var aftheader = "</tr>";
+
             $("#btn1").click(function () {
                 doSimulation();
             });
@@ -92,8 +93,7 @@
             });
             $("#btn3").click(function () {
                 window.open("enunciado.html");
-            });          
-
+            });       
 
 
             //FUNCIONES
@@ -101,47 +101,71 @@
                 var minsSimular = $("#minutos").val();
                 var cantidad = $("#filas").val();
                 var desdeMin = $("#desde").val();                
-                var contador = 0;
+                var contador = 0; //contador de filas
 
                 while (reloj <= minsSimular) {
                     doIteration();
-                    reloj = fila2[1];
+                    reloj = arrayToDraw[1];
                     if (reloj > 600) {
-                        fila2 = fila1.slice();
-                        fila2[1] = 600;
-                        fila2[0] = 1;
+                        arrayToDraw = fila1.slice()
+                        arrayToDraw[0] = 1;
+                        arrayToDraw[1] = 600;                        
                     }
-                    console.log(fila2);
+                    console.log(arrayToDraw);
                     if (reloj >= desdeMin && contador <= cantidad) {
                         drawIteration();
                         contador++;
                     }
                 }
                 drawTable();
-                $("#jose1").text(fila2[11]);
-                $("#jose2").text(fila2[12]);
-                $("#jose3").text(fila2[13]);
+                $("#jose1").text(arrayToDraw[11]);
+                $("#jose2").text(arrayToDraw[12]);
+                $("#jose3").text(arrayToDraw[13]);
             }
 
             function doIteration() {
-                if(primero == 0){firstIteration();}
+                if(reloj == 0){}
                 else{
-                fila1 = fila2.slice();                
+                    fila1 = arrayToDraw.slice();                
                     var nextEvent = getNextEvent();
-                    fila2[0] = nextEvent;
-                    fila2[1] = fila1[nextEvent];
-                    fila2[2] = 99999;
-                    fila2[3] = 99999;
-                    fila2[5] = 99999;
-                    fila2[6] = 99999;
+                    arrayToDraw[0] = nextEvent;
+                    arrayToDraw[1] = fila1[nextEvent]; //Reloj de proximo evento que va a ser dibujado
+                    arrayToDraw[2] = 99999;
+                    arrayToDraw[3] = 99999;
+                    arrayToDraw[5] = 99999;
+                    arrayToDraw[6] = 99999;
                     processEvent(nextEvent);  
                 }              
                 cantfila++;
             }
 
             function drawIteration() {
-                draw = fila2.slice();                               
-                for (i in draw) {
+                draw = arrayToDraw.slice();   //draw es el array que se va a dibujar                            
+                for (i in draw) { 
+                    switch(i){ // Cambiar if por switch
+                        case 0 : defineEvent(); cambio = true; break; //Nombre del evento que ocurre
+                        case 1 : ; // deberia llegarle el reloj o ya estar definido de antes
+                        case 2 : ; //
+                        case 3 : ; 
+                        case 4 : ;
+                        case 5 : ; 
+                        case 6 : ;
+                        case 7 : ; 
+                        case 8 : ;
+                        case 9 : ; 
+                        case 10 : ;
+                        case 11 : ; 
+                        case 12 : ;
+                        case 13 : ; 
+                        case 14 : ;
+                        case 15 : ; 
+                        case 16 : ;
+                        case 17 : ; 
+                        case 18 : ;
+                        case 19 : ;
+                        case 28 : ;
+
+                    }
                     var cambio = false;
                     if (i == 0) { defineEvent(); cambio = true; }
                     //todas las definiciones necesarias a considerar en el array                    
@@ -159,7 +183,7 @@
 
 
             function updateTable() {
-                if (fila1.length != fila2.length) {
+                if (fila1.length != arrayToDraw.length) {
                     $("#hder").append("<th>Proximo C" + contClientes + "</th><th>Estado C" + contClientes + "</th>");
                 }
                 $("#tabla").append("<tr id=fila" + cantfila + "></tr>");
@@ -189,9 +213,8 @@
             }
 
 
-            function firstIteration() {
-                primero == 1;
-            }
+            //function firstIteration() {
+            //}
 
             function getNextEvent() {
                 var nextEvent = 0;
@@ -199,7 +222,7 @@
                 for (i in columnasComparar) {
                     if (fila1[columnasComparar[i]] < minClock) { nextEvent = columnasComparar[i]; minClock = fila1[columnasComparar[i]]; }
                 }
-                return nextEvent;
+                return nextEvent; //Devuelve el numerode la clumna que contiene el proximo evento, lo que te permite tambien, saber cual va a ser el proximo evento
             }
 
             function processEvent(next) {
@@ -225,106 +248,105 @@
                 contClientes++;
                 var rnd = Math.random();
                 var tiempo = genTiempoLlegada(rnd);
-                var proximo = tiempo + fila2[1];
-                fila2[2] = rnd;
-                fila2[3] = tiempo;
-                fila2[4] = proximo;
+                var proximo = tiempo + arrayToDraw[1];
+                arrayToDraw[2] = rnd;
+                arrayToDraw[3] = tiempo;
+                arrayToDraw[4] = proximo;
                 if (colasLlenas()) {
-                    fila2[13]++;
+                    arrayToDraw[13]++;
                 } else {
-                    fila2[fila2.length] = fila2[1] + 20;
-                    fila2[fila2.length] = 0;
-                    columnasComparar[columnasComparar.length] = fila2.length - 2;
-                    if (fila1[8] == 1) { doNuevoEventoFin(); } else { fila2[9]++; }
+                    arrayToDraw[arrayToDraw.length] = arrayToDraw[1] + 20;
+                    arrayToDraw[arrayToDraw.length] = 0;
+                    columnasComparar[columnasComparar.length] = arrayToDraw.length - 2;
+                    if (fila1[8] == 1) { doNuevoEventoFin(); } else { arrayToDraw[9]++; }
                     header = header.concat("<th>Proximo C" + contClientes + "</th><th>Estado C" + contClientes + "</th>");
                 }
             }
 
             function doNuevoEnganche() {
-                fila2[11]++;
+                arrayToDraw[11]++;
                 finalizarUltimaAtencion();
                 if (colasVacias()) {
-                    fila2[8] = 1;
-                    fila2[7] = 99999;
+                    arrayToDraw[8] = 1;
+                    arrayToDraw[7] = 99999;
                 } else {
                     var rnd = Math.random();
                     var tiempo = genTiempoFin(rnd);
-                    var proximo = tiempo + fila2[1];
-                    fila2[5] = rnd;
-                    fila2[6] = tiempo;
-                    fila2[7] = proximo;
-                    if (fila2[10] > 0) {
-                        fila2[10]--;
+                    var proximo = tiempo + arrayToDraw[1];
+                    arrayToDraw[5] = rnd;
+                    arrayToDraw[6] = tiempo;
+                    arrayToDraw[7] = proximo;
+                    if (arrayToDraw[10] > 0) {
+                        arrayToDraw[10]--;
                         atenderCP();
                     } else {
-                        fila2[9]--;
+                        arrayToDraw[9]--;
                         atenderC();
                     }
                 }
             }
 
             function doNuevoDesenganche(next) {
-                fila2[9]--;
-                fila2[next] = fila2[next] + 60;
-                fila2[next + 1] = 1;
+                arrayToDraw[9]--;
+                arrayToDraw[next] = arrayToDraw[next] + 60;
+                arrayToDraw[next + 1] = 1;
             }
 
             function doRegresoCliente(next) {
                 if (colasLlenas()) {
-                    fila2[13]++;
-                    fila2[next] = 99999;
-                    fila2[next + 1] = 99999;
+                    arrayToDraw[13]++;
+                    arrayToDraw[next] = 99999;
+                    arrayToDraw[next + 1] = 99999;
                 } else {
-                    fila2[next] = fila2[1] + 20;
-                    fila2[next + 1] = 2;
-                    if (fila1[8] == 1) { doNuevoEventoFin(); } else { fila2[10]++; }
+                    arrayToDraw[next] = arrayToDraw[1] + 20;
+                    arrayToDraw[next + 1] = 2;
+                    if (fila1[8] == 1) { doNuevoEventoFin(); } else { arrayToDraw[10]++; }
                 }
             }
 
             function doFinCliente(next) {
-                fila2[12]++;
-                fila2[next] = 99999;
-                fila2[next + 1] = 99999;
-                fila2[10]--;
+                arrayToDraw[12]++;
+                arrayToDraw[next] = 99999;
+                arrayToDraw[next + 1] = 99999;
+                arrayToDraw[10]--;
             }
 
             function finalizarUltimaAtencion() {
                 var pivot = 15;
-                while (fila2[pivot] != 3) {
+                while (arrayToDraw[pivot] != 3) {
                     pivot += 2;
                 }
-                fila2[pivot] = 99999;
+                arrayToDraw[pivot] = 99999;
             }
 
             function atenderCP() {
                 var pivot = 15;
-                while (fila2[pivot] != 2) {
+                while (arrayToDraw[pivot] != 2) {
                     pivot += 2;
                 }
-                fila2[pivot] = 3;
-                fila2[pivot - 1] = 99999;
+                arrayToDraw[pivot] = 3;
+                arrayToDraw[pivot - 1] = 99999;
             }
 
             function atenderC() {
                 var pivot = 15;
-                while (fila2[pivot] != 0) {
+                while (arrayToDraw[pivot] != 0) {
                     pivot += 2;
                 }
-                fila2[pivot] = 3;
-                fila2[pivot - 1] = 99999;
+                arrayToDraw[pivot] = 3;
+                arrayToDraw[pivot - 1] = 99999;
             }
 
             function doNuevoEventoFin() {
-                //usar esto implica que ultimo cliente es el q hay q tocar
                 var rnd = Math.random();
                 var tiempo = genTiempoFin(rnd);
-                var proximo = tiempo + fila2[1];
-                fila2[5] = rnd;
-                fila2[6] = tiempo;
-                fila2[7] = proximo;
-                fila2[8] = 0;
-                fila2[fila2.length - 2] = 99999;
-                fila2[fila2.length - 1] = 3;
+                var proximo = tiempo + arrayToDraw[1];
+                arrayToDraw[5] = rnd;
+                arrayToDraw[6] = tiempo;
+                arrayToDraw[7] = proximo;
+                arrayToDraw[8] = 0;
+                arrayToDraw[arrayToDraw.length - 2] = 99999;
+                arrayToDraw[arrayToDraw.length - 1] = 3;
             }
 
             function colasLlenas() {
@@ -358,6 +380,7 @@
                 return false;
             }
 
+            //Dibujo de la tabla final antes de mostrar
             function drawTable() {
                 var conTabla = "";
                 header = header.concat(aftheader);
