@@ -56,7 +56,7 @@
             var acoplado4 = new Acoplado(4, "Lleno", transportador2);
 
             var acoplados = [acoplado1, acoplado2, acoplado3, acoplado4];
-            
+
             var picadora1 = new Picadora(1, "Recolectando", 3, acoplado1);
             var picadora2 = new Picadora(1, "Recolectando", 5, acoplado2);
 
@@ -203,16 +203,16 @@
                 var event = draw[0];
                 if (event == 0) { draw[0] = "Inicio Simulación "; return 1; }
                 if (event == 1) { draw[0] = "Fin Simulación"; return 1; }
-                if (event == 4) { draw[0] = "Fian Llenada de Acoplado"; return 1; }
+                if (event == 4) { draw[0] = "Fin Llenada de Acoplado"; return 1; }
                 if (event == 16) { draw[0] = "Fin Enganche Acoplado"; return 1; }
                 if (event == 17) { draw[0] = "Fin Desenganche Acoplado"; return 1; }
                 if (event == 20) { draw[0] = "Fin Descarga"; return 1; }
             }
 
-            function defineEstadoServer() {
-                if (draw[8] == 0) { draw[8] = "OCUPADO"; return 1; }
-                else { draw[8] = "LIBRE"; };
-            }
+            //function defineEstadoServer() {
+            //    if (draw[8] == 0) { draw[8] = "OCUPADO"; return 1; }
+            //    else { draw[8] = "LIBRE"; };
+            //}
 
             function truncateDecimal(numero) {
                 var with2Decimals = numero.toString().match(/^-?\d+(?:\.\d{0,2})?/)[0]
@@ -234,7 +234,7 @@
 
             function processEvent(next) {
                 if (next == 4) {
-                    doNuevaLlenada();
+                    doFinLlenada();
                     return 1;
                 }
                 if (next == 16) {
@@ -249,40 +249,24 @@
                     doNuevaDescarga(next);
                     return 1;
                 }
+            }           
+
+            function doFinLlenada() {
+                
             }
 
-            function doNuevaLlenada() {
+            function doNuevoEnganche() {
+                
+                // Lo de abajo genera nuevotiempo de llenado y lo coloca en el array
                 var rnd = Math.random();
                 var tiempo = genTiempoLlenadaAcoplado(rnd);
                 var proximo = tiempo + arrayToDraw[1];
                 arrayToDraw[2] = rnd;
                 arrayToDraw[3] = tiempo;
-                arrayToDraw[4] = proximo;
-
+                arrayToDraw[4] = proximo;               
             }
 
-            function doNuevoEnganche() {
-                arrayToDraw[11]++;
-                finalizarUltimaAtencion();
-                if (colasVacias()) {
-                    arrayToDraw[8] = 1;
-                    arrayToDraw[7] = 99999;
-                } else {
-                    var rnd = Math.random();
-                    var tiempo = genTiempoFin(rnd);
-                    var proximo = tiempo + arrayToDraw[1];
-                    arrayToDraw[5] = rnd;
-                    arrayToDraw[6] = tiempo;
-                    arrayToDraw[7] = proximo;
-                    if (arrayToDraw[10] > 0) {
-                        arrayToDraw[10]--;
-                        atenderCP();
-                    } else {
-                        arrayToDraw[9]--;
-                        atenderC();
-                    }
-                }
-            }
+            
 
             function doNuevoDesenganche(next) {
                 arrayToDraw[9]--;
