@@ -71,7 +71,7 @@
 
             var empleado1 = new Empleado(1, "libre");
 
-            
+
             var colaEmbutidora = [transportador2];
             var colaEnganche = [];
             var colaDesenganche = [];
@@ -249,25 +249,25 @@
                     doNuevaDescarga(next);
                     return 1;
                 }
-            }           
+            }
 
             function doFinLlenada(picadora, acoplado) {
-                
-                                
+
+
             }
 
             function doNuevoEnganche() {
-                
+
                 // Lo de abajo genera nuevotiempo de llenado y lo coloca en el array
                 var rnd = Math.random();
                 var tiempo = genTiempoLlenadaAcoplado(rnd);
                 var proximo = tiempo + arrayToDraw[1];
                 arrayToDraw[2] = rnd;
                 arrayToDraw[3] = tiempo;
-                arrayToDraw[4] = proximo;               
+                arrayToDraw[4] = proximo;
             }
 
-            
+
 
             function doNuevoDesenganche(next) {
                 arrayToDraw[9]--;
