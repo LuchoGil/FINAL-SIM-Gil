@@ -59,15 +59,15 @@
             }
 
 
-            var acoplado1 = new Acoplado(1, "Recolectando", picadora1); //Recolectando, Lleno, Libre
-            var acoplado2 = new Acoplado(2, "Recolectando", picadora2);
+            var acoplado1 = new Acoplado(1, "Llenando", picadora1); //Llenando, Lleno, Libre
+            var acoplado2 = new Acoplado(2, "Llenando", picadora2);
             var acoplado3 = new Acoplado(3, "Lleno", transportador1);
             var acoplado4 = new Acoplado(4, "Lleno", transportador2);
 
             var acoplados = [acoplado1, acoplado2, acoplado3, acoplado4];
 
-            var picadora1 = new Picadora(1, "Recolectando", 3, acoplado1);
-            var picadora2 = new Picadora(1, "Recolectando", 5, acoplado2);
+            var picadora1 = new Picadora(1, "Llenando", 3, acoplado1);
+            var picadora2 = new Picadora(1, "Llenando", 5, acoplado2);
 
             var picadoras = [picadora1, picadora2]
 
@@ -84,9 +84,14 @@
             var colaEmbutidora = [transportador2];
             var colaEnganche = [];
             var colaDesenganche = [];
+            var acopladosLibres = [];
+            var acopladosLlenos = [];
+            
             var contadorEmbutidos = 0; //Lo que se debemostrar al final
             var reloj = 0;
-            var acopladosLibres = [];
+
+            var tiempoEnganche = 20;
+            var tiempoDesenganche = 10;
 
             var rndLlenada = "-";
             var tiempoLlenada = "-";
@@ -142,14 +147,14 @@
 
             //function simular() {
             //tabla = pd.DataFrame()
-            var contador_filas = 0
-            var contador_objetos = 0
+            var contador_filas = 0;
+            var contador_objetos = 0;
 
             fila_actual = [];
             fin_mostrar = false;
             ultima_fila = false;
 
-            var eventoInicio = new Evento("Inicio Simulacion", 0);
+            var eventoInicio = new Evento("Inicio Simulacion", 0, null);
             agregar_evento(eventoInicio);
             //}
 
@@ -177,18 +182,18 @@
 
                     if (prox_evento.nombre == "Fin Llenada Acoplado") { //Como ignorar mayusculas?
                         if (empleado1.estado == "Libre") {
-                            finDesenganche = reloj + 20;
-                            var eventoAux = new Evento("Fin Desenganche Acoplado", finEvento, prox_evento.actor);
+                            finDesenganche = reloj + tiempoDesenganche;
+                            var eventoAux = new Evento("Fin Desenganche Acoplado", finDesenganche, prox_evento.actor);
                             agregar_evento(eventoAux);
                             prox_evento.actor.estado == "Desenganchando";
-                            prox_evento.actor.horaFin = finEvento;
-                            prox_evento.actor.acoplado.estado == "Desenganchando"
-                            arrayToDraw[17] = finDesenganche;
+                            prox_evento.actor.horaFin = finDesenganche;
+                            prox_evento.actor.acoplado.estado == "Desenganchando";
+
                         }
                         else {
                             colaDesenganche.push(prox_evento.actor);
                             prox_evento.actor.estado == "Esperando Desenganche";
-                            prox_evento.horaFin == "-";
+                            prox_evento.actor.horaFin == "-";
                             prox_evento.actor.acoplado.estado == "Esperando Desenganche";
                         }
                     }
@@ -199,14 +204,25 @@
                                 rnd = Math.random();
                                 tiempoLlenada = genTiempoLlenadaAcoplado(rnd);
                                 finLlenada = reloj + tiempoLlenada;
-                                var eventoAux = new Evento("Fin Llenada Acoplado", finEvento, prox_evento.actor)
-
+                                var eventoAux = new Evento("Fin Llenada Acoplado", finLlenada, prox_evento.actor);
+                                prox_evento.actor.acoplado = acopladosLibres.pop();
+                                prox_evento.actor.estado == "Llenando";
+                                prox_evento.actor.horaFin = finLlenada;
+                                prox_evento.actor.acoplado.estado == "Llenando";
+                            }
+                            else {
+                                colaEnganche.push(prox_evento.actor);
+                                prox_evento.actor.estado == "Esperando Enganche";
+                                prox_evento.actor.horaFin == "-";
+                                prox_evento.actor.acoplado.estado == "Lleno";
+                                acopladosLlenos.push(prox_evento.actor.acoplado);
+                                prox_evento.actor.acoplado = null;
                             }
                         }
 
                         else { // Si se desengancha un transportador
                             if (colaEnganche.length > 0 && colaEnganche[0].type(Picadora)) {
-                                finEvento = reloj + 20;
+                                finEvento = reloj + tiempoDesenganche;
                                 var eventoAux = new Evento("Fin Llenada Acoplado", finEvento, prox_evento.actor)
 
                             }
@@ -429,51 +445,7 @@
                 arrayToDraw[next + 1] = 1;
             }
 
-            function doRegresoCliente(next) {
-                if (colasLlenas()) {
-                    arrayToDraw[13]++;
-                    arrayToDraw[next] = 99999;
-                    arrayToDraw[next + 1] = 99999;
-                } else {
-                    arrayToDraw[next] = arrayToDraw[1] + 20;
-                    arrayToDraw[next + 1] = 2;
-                    if (fila1[8] == 1) { doNuevoEventoFin(); } else { arrayToDraw[10]++; }
-                }
-            }
-
-            function doFinCliente(next) {
-                arrayToDraw[12]++;
-                arrayToDraw[next] = 99999;
-                arrayToDraw[next + 1] = 99999;
-                arrayToDraw[10]--;
-            }
-
-            function finalizarUltimaAtencion() {
-                var pivot = 15;
-                while (arrayToDraw[pivot] != 3) {
-                    pivot += 2;
-                }
-                arrayToDraw[pivot] = 99999;
-            }
-
-            function atenderCP() {
-                var pivot = 15;
-                while (arrayToDraw[pivot] != 2) {
-                    pivot += 2;
-                }
-                arrayToDraw[pivot] = 3;
-                arrayToDraw[pivot - 1] = 99999;
-            }
-
-            function atenderC() {
-                var pivot = 15;
-                while (arrayToDraw[pivot] != 0) {
-                    pivot += 2;
-                }
-                arrayToDraw[pivot] = 3;
-                arrayToDraw[pivot - 1] = 99999;
-            }
-
+            
             function doNuevoEventoFin() {
                 var rnd = Math.random();
                 var tiempo = genTiempoFin(rnd);
@@ -484,17 +456,7 @@
                 arrayToDraw[8] = 0;
                 arrayToDraw[arrayToDraw.length - 2] = 99999;
                 arrayToDraw[arrayToDraw.length - 1] = 3;
-            }
-
-            function colasLlenas() {
-                var suma = fila1[9] + fila1[10];
-                if (suma >= 10) { return true; } else { return false; }
-            }
-
-            function colasVacias() {
-                var suma = fila1[9] + fila1[10];
-                if (suma == 0) { return true; } else { return false; }
-            }
+            }            
 
             //GENERADORES DE TIMPOS
             function genTiempoLlenadaAcoplado(rnd) { //exponencial negativa -9 (llenar el acoplado de maiz)
