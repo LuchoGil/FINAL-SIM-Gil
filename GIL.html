@@ -191,7 +191,7 @@
                             prox_evento.actor.acoplado.estado == "Desenganchando";
 
                         }
-                        else {
+                        else { //En esta zona puede llegar a haber problemas de prioridades, ya que siemrpe primero las picadoras
                             empleado1.estado == "Ocupado";
                             colaDesenganche.push(prox_evento.actor);
                             prox_evento.actor.estado == "Esperando Desenganche";
@@ -257,6 +257,11 @@
                         }
 
                     }
+                    else if (prox_evento.nombre == "Fin Enganche Acoplado") {
+
+
+
+                    }
 
                     else if (prox_evento.nombre == "Inicio Simulacion") { //agrega los eventos que se pueden identificar al inicio a la lista de eventos
                         var eventosInicio = [];
@@ -273,7 +278,7 @@
                             }
                         }
                         agregar_evento(eventosInicio);
-                        drawIteration();
+
                     }
 
 
@@ -292,7 +297,9 @@
                         contador++;
                     }
 
-                    // Volvemos las variables a su estado original para que se muestren bien la proxima iteracion
+                    drawIteration();
+
+                    // Volvemos las variables a su estado original para que se muestren bien la proxima iteracion                    
                     var rndLlenada = "-";
                     var tiempoLlenada = "-";
                     var finLlenada = "-";
@@ -303,7 +310,7 @@
                     var finDescarga = "-";
                 }
 
-                //Dibujar tabla
+                //Dibujar tabla al sair del while
                 drawTable();
                 $("#jose1").text(arrayToDraw[11]);
                 $("#jose2").text(arrayToDraw[12]);
@@ -402,19 +409,10 @@
                 if (event == 20) { draw[0] = "Fin Descarga"; return 1; }
             }
 
-            //function defineEstadoServer() {
-            //    if (draw[8] == 0) { draw[8] = "OCUPADO"; return 1; }
-            //    else { draw[8] = "LIBRE"; };
-            //}
-
             function truncateDecimal(numero) {
                 var with2Decimals = numero.toString().match(/^-?\d+(?:\.\d{0,2})?/)[0]
                 return with2Decimals;
             }
-
-
-            //function firstIteration() {
-            //}
 
             function getNextEvent() {
                 var nextEvent = 0;
@@ -460,14 +458,11 @@
                 arrayToDraw[4] = proximo;
             }
 
-
-
             function doNuevoDesenganche(next) {
                 arrayToDraw[9]--;
                 arrayToDraw[next] = arrayToDraw[next] + 60;
                 arrayToDraw[next + 1] = 1;
             }
-
 
             function doNuevoEventoFin() {
                 var rnd = Math.random();
@@ -492,14 +487,6 @@
             function genTiempoFinEmbutir(rnd) { //uniforme  media 4.5 min con desviacion 0.5 min (descargar en embutidora)
                 var tiempo = 4.5 + (rnd * 0.5);
                 return tiempo;
-            }
-
-            function contains(x, ar) {
-                console.log("Entre a contain");
-                for (i in ar) {
-                    if (x == ar[i]) { return true; }
-                }
-                return false;
             }
 
             //Dibujo de la tabla final antes de mostrar
