@@ -49,6 +49,14 @@
                 }
             }
 
+            class Evento {
+                constructor(nombre, hora, activo) {
+                    this.nombre = nombre;
+                    this.hora = hora;
+                    this.activo = activo;
+                }
+            }
+
 
             var acoplado1 = new Acoplado(1, "Recolectando", picadora1);
             var acoplado2 = new Acoplado(2, "Recolectando", picadora2);
@@ -75,7 +83,7 @@
             var colaEmbutidora = [transportador2];
             var colaEnganche = [];
             var colaDesenganche = [];
-            var contadorEmbutidos = 0;
+            var contadorEmbutidos = 0; //Lo que se debemostrar al final
             var reloj = 0;
 
             var fila1 = [0, 0, 99999, 99999, 99999, 99999, 99999, 99999, 1, 0, 0, 0, 0, 0];
@@ -101,15 +109,84 @@
                 window.open("enunciado.html");
             });
 
+            //CODIGO EXTRA                        
+            var cola_eventos = [];
+            var tiempo = tiempo;
+            var tiempo_actual = 0.0;
+            var index_columnas = 0;
+            var mostrar_desde = mostrar_desde;
+            var iteraciones = iteraciones;
+            var tiempo_grua = tiempo_grua;
+            var capacidad_grua = capacidad_grua;
+            var min_serv_grua = min_serv_grua;
+            var cont_abandonos = 0;
+            var cont_atendidos = 0;
+            var acum_ganancias = 0.0;
+            var acum_permanencia = 0.0;
+            var objetos_temporales = [];
+            var columnas = ["Estado", "Reloj", "RND P1", "Tiempo lleg. P1", "Prox. lleg. P1", "RND P2", "Tiempo lleg. P2", "Prox. lleg. P2", "i de llegada",
+                "Destino traslado", "Fin traslado", "Estado grua", "Cola P1", "Cola P2", "Acum. Ganancias",
+                "Cont. Perdidos", "Cont. Atendidos", "Acum. Permanencia"];
+
+            //function simular() {
+            //tabla = pd.DataFrame()
+            var contador_filas = 0
+            var contador_objetos = 0
+
+            fila_actual = [];
+            fin_mostrar = false;
+            ultima_fila = false;
+
+            var eventoInicio = new Evento("Inicio Simulacion", 0);
+            agregar_evento(eventoInicio);
+            //}
+
 
             //FUNCIONES
-            function doSimulation() {
+            function doSimulation() { //MOST IMPORTANT
                 var minsSimular = $("#minutos").val();
                 var cantidad = $("#filas").val();
                 var desdeMin = $("#desde").val();
                 var contador = 0; //contador de filas
 
+                var contador_filas = 0
+                var contador_objetos = 0
+                fila_actual = [];
+                fin_mostrar = false;
+                ultima_fila = false;
+
+                var eventoInicio = new Evento("Inicio Simulacion", 0);
+                cola_eventos.append(evento);
+
                 while (reloj <= minsSimular) {
+                    prox_evento = cola_eventos.pop(0);
+                    tiempo_actual = prox_evento.hora;
+                    //ultima_fila = false;
+
+                    if (prox_evento.nombre == "Llegada auto P1") {
+
+                    }
+
+
+                    else if (prox_evento.nombre == "Inicio Simulacion") { //agrega los eventos que se pueden identificar al inicio a la lista de eventos
+                        var eventosInicio = [];
+                        for (p in picadoras) {
+                            if (p.tiempoRestante = ! "-") {
+                                var eventoInicio = new Evento("Fin Llenada de Acoplado", reloj + p.tiempoRestante);
+                                eventosInicio.push(eventoInicio);
+                            }
+                        }
+                        for (t in transportadores) {
+                            if (t.tiempoRestante = ! "-") {
+                                var eventoInicio = new Evento("Fin Descarga", reloj + p.tiempoRestante);
+                                eventosInicio.push(eventoInicio);
+                            }
+                        }
+                        agregar_evento(eventosInicio);
+                    }
+
+
+                    //Ultima parte del eveno doSimulacion()
                     doIteration();
                     reloj = arrayToDraw[1];
                     if (reloj > 600) {
@@ -128,6 +205,23 @@
                 $("#jose2").text(arrayToDraw[12]);
                 $("#jose3").text(arrayToDraw[13]);
             }
+
+
+
+            function agregar_evento(eventos) {
+                if (type(eventos) != list) {
+                    cola_eventos.append(eventos)
+                }
+                else {
+                    for (e in eventos) {
+                        cola_eventos.append(e);
+                    }
+                }
+                cola_eventos.sort(function (a, b) { return a.hora - b.hora });
+            }
+
+
+
 
             function doIteration() {
                 if (reloj == 0) { }
@@ -201,7 +295,7 @@
 
             function defineEvent() {
                 var event = draw[0];
-                if (event == 0) { draw[0] = "Inicio Simulación "; return 1; }
+                if (event == 0) { draw[0] = "Inicio Simulacion"; return 1; }
                 if (event == 1) { draw[0] = "Fin Simulación"; return 1; }
                 if (event == 4) { draw[0] = "Fin Llenada de Acoplado"; return 1; }
                 if (event == 16) { draw[0] = "Fin Enganche Acoplado"; return 1; }
@@ -452,7 +546,6 @@
         <b id="jose3"></b>
         <br>
     </div>
-
 
     <button type="button" class="btn" id="btn1">Simular</button>
     <br>
