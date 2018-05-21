@@ -104,7 +104,7 @@
 
 
             var fila1 = [0, 0, 99999, 99999, 99999, 99999, 99999, 99999, 1, 0, 0, 0, 0, 0];
-            var arrayToDraw = [prox_evento.nombre, reloj, rndLlenada, tiempoLlenada, finLlenada, picadora1.estado, picadora1.horaFin, picadora2.estado, picadora2.horaFin, acoplado1.estado, 10 acoplado2.estado, acoplado3.estado, acoplado4.estado, colaEnganche.length, colaDesenganche.length, empleado1.estado, 16 finEnganche, 17 finDesenganche, rndDescarga, tiempoDescargar, finDescarga, 21transportador1.estado, transportador1.horaFin, transportador2.estado, 24transportador2.horaFin, colaEmbutidora.length, embutidora1.estado, 27contadorEmbutidos]; //Array primera iteracion 28 columnas
+            var arrayToDraw = [prox_evento.nombre, reloj, rndLlenada, tiempoLlenada, finLlenada, picadora1.estado, picadora1.horaFin, picadora2.estado, picadora2.horaFin, acoplado1.estado, acoplado2.estado, acoplado3.estado, acoplado4.estado, colaEnganche.length, colaDesenganche.length, empleado1.estado, finEnganche, finDesenganche, rndDescarga, tiempoDescargar, finDescarga, transportador1.estado, transportador1.horaFin, transportador2.estado, transportador2.horaFin, colaEmbutidora.length, embutidora1.estado, contadorEmbutidos]; //Array primera iteracion 28 columnas
             var draw = [0, 0, 99999, 99999, 99999, 99999, 99999, 99999, 1, 0, 0, 0, 0, 0];
             var drawArray = []; //Array a ser mostrado, es un array de arrays
             var blankArray = [99999, 99999, 99999, 99999, 99999, 99999, 99999, 99999, 99999, 99999, 99999, 99999, 99999, 99999];
@@ -256,69 +256,59 @@
                             prox_evento.actor.acoplado = null;
                         }
 
-
-
-
                     }
-
-
-                }
-
-
-
-
 
                     else if (prox_evento.nombre == "Inicio Simulacion") { //agrega los eventos que se pueden identificar al inicio a la lista de eventos
-                    var eventosInicio = [];
-                    for (p in picadoras) {
-                        if (p.horaFin = ! "-") {
-                            var eventoInicio = new Evento("Fin Llenada Acoplado", p.horaFin, p);
-                            eventosInicio.push(eventoInicio);
+                        var eventosInicio = [];
+                        for (p in picadoras) {
+                            if (p.horaFin = ! "-") {
+                                var eventoInicio = new Evento("Fin Llenada Acoplado", p.horaFin, p);
+                                eventosInicio.push(eventoInicio);
+                            }
                         }
-                    }
-                    for (t in transportadores) {
-                        if (t.horaFin = ! "-") {
-                            var eventoInicio = new Evento("Fin Descarga", t.horaFin, t);
-                            eventosInicio.push(eventoInicio);
+                        for (t in transportadores) {
+                            if (t.horaFin = ! "-") {
+                                var eventoInicio = new Evento("Fin Descarga", t.horaFin, t);
+                                eventosInicio.push(eventoInicio);
+                            }
                         }
+                        agregar_evento(eventosInicio);
+                        drawIteration();
                     }
-                    agregar_evento(eventosInicio);
-                    drawIteration();
+
+
+                    //Ultima parte del evento doSimulacion()
+                    doIteration();
+                    reloj = arrayToDraw[1];
+                    if (reloj > 600) {
+                        arrayToDraw = fila1.slice()
+                        arrayToDraw[0] = 1;
+                        arrayToDraw[1] = 600;
+                    }
+                    console.log(arrayToDraw);
+                    if (reloj >= desdeMin && contador <= cantidad) {
+                        drawIteration();
+
+                        contador++;
+                    }
+
+                    // Volvemos las variables a su estado original para que se muestren bien la proxima iteracion
+                    var rndLlenada = "-";
+                    var tiempoLlenada = "-";
+                    var finLlenada = "-";
+                    var finEnganche = "-";
+                    var finDesenganche = "-";
+                    var rndDescarga = "-";
+                    var tiempoDescargar = "-";
+                    var finDescarga = "-";
                 }
 
-
-                //Ultima parte del evento doSimulacion()
-                doIteration();
-                reloj = arrayToDraw[1];
-                if (reloj > 600) {
-                    arrayToDraw = fila1.slice()
-                    arrayToDraw[0] = 1;
-                    arrayToDraw[1] = 600;
-                }
-                console.log(arrayToDraw);
-                if (reloj >= desdeMin && contador <= cantidad) {
-                    drawIteration();
-
-                    contador++;
-                }
-
-                // Volvemos las variables a su estado original para que se muestren bien la proxima iteracion
-                var rndLlenada = "-";
-                var tiempoLlenada = "-";
-                var finLlenada = "-";
-                var finEnganche = "-";
-                var finDesenganche = "-";
-                var rndDescarga = "-";
-                var tiempoDescargar = "-";
-                var finDescarga = "-";
+                //Dibujar tabla
+                drawTable();
+                $("#jose1").text(arrayToDraw[11]);
+                $("#jose2").text(arrayToDraw[12]);
+                $("#jose3").text(arrayToDraw[13]);
             }
-
-            //Dibujar tabla
-            drawTable();
-            $("#jose1").text(arrayToDraw[11]);
-            $("#jose2").text(arrayToDraw[12]);
-            $("#jose3").text(arrayToDraw[13]);
-        }
 
 
 
