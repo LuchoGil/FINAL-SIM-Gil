@@ -83,8 +83,8 @@
 
             var picadoras = [picadora1, picadora2]
 
-            var transportador1 = new Transportador(1, "descargando", 4, acoplado3);
-            var transportador2 = new Transportador(2, "esperando descarga", "-", acoplado4);
+            var transportador1 = new Transportador(1, "Descargando", 4, acoplado3);
+            var transportador2 = new Transportador(2, "Esperando Descarga", "-", acoplado4);
 
             var transportadores = [transportador1, transportador2];
 
@@ -92,19 +92,23 @@
 
             var empleado1 = new Empleado(1, "Libre");
 
-
+            // Colas!!!!
             var colaEmbutidora = [transportador2];
-            var colaEnganche = [];
-            var colaDesenganche = [];
+            var colaEnganchePicadoras = [];
+            var colaDesenganchePicadoras = [];
+            var colaEngancheTransportadores = [];
+            var colaDesengancheTransportadores = [];
             var acopladosLibres = [];
             var acopladosLlenos = [];
 
             var contadorEmbutidos = 0; //Lo que se debemostrar al final
             var reloj = 0;
 
+            //Cambiar para obtener otros tiempos
             var tiempoEnganche = 20;
             var tiempoDesenganche = 10;
 
+            
             var rndLlenada = "-";
             var tiempoLlenada = "-";
             var finLlenada = "-";
@@ -116,31 +120,18 @@
 
             //CODIGO EXTRA                        
             var colaEventos = [];
-            var tiempo = tiempo;
-            var reloj = 0.0;
-            var index_columnas = 0;
-            var mostrar_desde = mostrar_desde;
-            var iteraciones = iteraciones;
-            var tiempo_grua = tiempo_grua;
-            var capacidad_grua = capacidad_grua;
-            var min_serv_grua = min_serv_grua;
-            var cont_abandonos = 0;
-            var cont_atendidos = 0;
-            var acum_ganancias = 0.0;
-            var acum_permanencia = 0.0;
-            var objetos_temporales = [];
+            var reloj = 0.0;           
 
+            // Evento queda inicio todo
             var proxEvento = new Evento("Inicio Simulacion", 0);
             colaEventos.push(proxEvento);
-
-            var fila1 = [0, 0, 99999, 99999, 99999, 99999, 99999, 99999, 1, 0, 0, 0, 0, 0];
+            
             var arrayToDraw = [proxEvento.nombre, reloj, rndLlenada, tiempoLlenada, finLlenada, picadora1.estado,
-            picadora1.horaFin, picadora2.estado, picadora2.horaFin, acoplado1.estado, acoplado2.estado,
-            acoplado3.estado, acoplado4.estado, colaEnganche.length, colaDesenganche.length, empleado1.estado,
-                finEnganche, finDesenganche, rndDescarga, tiempoDescarga, finDescarga, transportador1.estado,
-            transportador1.horaFin, transportador2.estado, transportador2.horaFin, colaEmbutidora.length,
-            embutidora1.estado, contadorEmbutidos
-            ]; //Array primera iteracion 28 columnas
+            picadora1.horaFin, picadora2.estado, picadora2.horaFin, colaEnganchePicadoras.length, colaDesenganchePicadoras.length, acoplado1.estado, acoplado2.estado,
+            acoplado3.estado, acoplado4.estado, acopladosLibres.length, acopladosLlenos.length,, empleado1.estado,
+            finEnganche, finDesenganche, rndDescarga, tiempoDescarga, finDescarga, transportador1.estado,
+            transportador1.horaFin, transportador2.estado, transportador2.horaFin, colaEngancheTransportadores, colaDesengancheTransportadores, colaEmbutidora.length,
+            embutidora1.estado, contadorEmbutidos]; //Array primera iteracion 28 columnas
             var draw = [0, 0, 99999, 99999, 99999, 99999, 99999, 99999, 1, 0, 0, 0, 0, 0];
             var drawArray = []; //Array a ser mostrado, es un array de arrays
             var blankArray = [99999, 99999, 99999, 99999, 99999, 99999, 99999, 99999, 99999, 99999, 99999,
