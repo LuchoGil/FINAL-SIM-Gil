@@ -40,7 +40,9 @@
                     this.estado = estado;
                 }
                 trabajar() {
+
                     // ---- Cola picadora para enganchar y hay acoplados libre -> Engancha Picadora
+
                     // Cola picadora para enganchar y no hay acoplados libres y hay cola transportadores para desenganchar -> Desengancha transportadore
                     // Cola picadora para enganchar y no hay acoplados libres y no hay cola transportadores para desenganchar y hay cola transportadores para enganchar y hay acoplados llenos -> Engancha transportador
                     // Cola picadora para enganchar y no hay acoplados libres y no hay cola transportadores para desenganchar y hay cola transportadores para enganchar y no hay acoplados llenos y hay picadoras para desenganchar-> Desengancha picadora 
@@ -52,7 +54,6 @@
 
                     return true;
                 }
-
             }
 
             class Embutidora {
@@ -108,7 +109,7 @@
             var tiempoEnganche = 20;
             var tiempoDesenganche = 10;
 
-            
+
             var rndLlenada = "-";
             var tiempoLlenada = "-";
             var finLlenada = "-";
@@ -120,28 +121,23 @@
 
             //CODIGO EXTRA                        
             var colaEventos = [];
-            var reloj = 0.0;           
+            var reloj = 0.0;
 
             // Evento queda inicio todo
             var proxEvento = new Evento("Inicio Simulacion", 0);
             colaEventos.push(proxEvento);
-            
+
             var arrayToDraw = [proxEvento.nombre, reloj, rndLlenada, tiempoLlenada, finLlenada, picadora1.estado,
             picadora1.horaFin, picadora2.estado, picadora2.horaFin, colaEnganchePicadoras.length, colaDesenganchePicadoras.length, acoplado1.estado, acoplado2.estado,
-            acoplado3.estado, acoplado4.estado, acopladosLibres.length, acopladosLlenos.length,, empleado1.estado,
-            finEnganche, finDesenganche, rndDescarga, tiempoDescarga, finDescarga, transportador1.estado,
+            acoplado3.estado, acoplado4.estado, acopladosLibres.length, acopladosLlenos.length, , empleado1.estado,
+                finEnganche, finDesenganche, rndDescarga, tiempoDescarga, finDescarga, transportador1.estado,
             transportador1.horaFin, transportador2.estado, transportador2.horaFin, colaEngancheTransportadores, colaDesengancheTransportadores, colaEmbutidora.length,
             embutidora1.estado, contadorEmbutidos]; //Array primera iteracion 28 columnas
             var draw = [0, 0, 99999, 99999, 99999, 99999, 99999, 99999, 1, 0, 0, 0, 0, 0];
             var drawArray = []; //Array a ser mostrado, es un array de arrays
-            var blankArray = [99999, 99999, 99999, 99999, 99999, 99999, 99999, 99999, 99999, 99999, 99999,
-                99999, 99999, 99999
-            ];
-            var cantfila = 0;
-            var contClientes = 0;
-            var columnasComparar = [4, 16, 17, 20]; //4 fin prox llenada de acoplado - 16 fin enganche prox - 17 fin desenganche proximo - 20 fin descarga en embutidora
-            var primero = 0;
+
             var urll = window.location.href;
+
             var header =
                 "<tr id='hder' class='cabeza'><th>Evento</th><th>Reloj</th><th>RND</th><th>Tiempo Llenada</th><th>Fin Llenada</th><th>P1 Estado</th><th>P1 Fin</th><th>P2 Estado</th><th>P2 Fin </th>    <th>A1 Estado</th> <th>A1 Fin</th> <th>A2 Estado</th> <th>A2 Fin</th> <th>A3 Estado</th> <th>A3 Fin</th> <th>A4 Estado</th> <th>A4 Fin</th>  <th>C Enganches</th> <th>C Desenganchs</th> <th>E1 Estado</th>  <th>Fin Enganche</th> <th>Fin Desenganche</th> <th>RND</th> <th>T Descarga</th> <th>Fin Descarga</th> <th>T1 Estado</th> <th>T1 Fin</th> <th>T2 Estado</th> <th>T2 Fin</th> <th>Cola Embutidora</th> <th>Emb Estado</th> <th>Cantidad Embutidos</th>"
             var aftheader = "</tr>";
@@ -156,17 +152,6 @@
                 window.open("enunciado.html");
             });
 
-
-            //function simular() {
-            //tabla = pd.DataFrame()
-            var contador_filas = 0;
-            var contador_objetos = 0;
-
-            fila_actual = [];
-            fin_mostrar = false;
-            ultima_fila = false;
-
-
             //FUNCIONES
             function doSimulation() { //MOST IMPORTANT
                 var minsSimular = $("#minutos").val();
@@ -174,16 +159,10 @@
                 var desdeMin = $("#desde").val();
                 var contador = 0; //contador de filas
 
-                var contador_filas = 0
-                var contador_objetos = 0
-                fila_actual = [];
-                fin_mostrar = false;
-                ultima_fila = false;
-
                 while (reloj <= minsSimular) {
                     proxEvento = colaEventos.pop(0);
                     reloj = proxEvento.hora;
-                    //ultima_fila = false;
+                    //ultimaFila = false;
 
                     if (proxEvento.nombre == "Fin Llenada Acoplado") { //Como ignorar mayusculas?
                         if (empleado1.estado == "Libre") {
@@ -194,7 +173,6 @@
                             proxEvento.actor.estado = "Desenganchando " + proxEvento.actor.acoplado.numero;
                             proxEvento.actor.horaFin = finDesenganche;
                             proxEvento.actor.acoplado.estado = "Desenganchando";
-
                         } else { //En esta zona puede llegar a haber problemas de prioridades, ya que siemrpe primero las picadoras
                             colaDesenganche.push(proxEvento.actor);
                             proxEvento.actor.estado = "Esperando Desenganche";
@@ -357,12 +335,6 @@
 
                 //Dibujar tabla al sair del while
                 drawTable();
-
-                //???
-                //$("#jose1").text(arrayToDraw[11]);
-                //$("#jose2").text(arrayToDraw[12]);
-                //$("#jose3").text(arrayToDraw[13]);
-
             }
 
             function agregar_evento(eventos) {
@@ -377,9 +349,6 @@
                     return b.hora - a.hora;
                 });
             }
-
-
-
 
             function doIteration() {
                 if (reloj == 0) { } else {
@@ -478,72 +447,7 @@
                 var with2Decimals = numero.toString().match(/^-?\d+(?:\.\d{0,2})?/)[0]
                 return with2Decimals;
             }
-
-            function getNextEvent() {
-                var nextEvent = 0;
-                var minClock = 9999999;
-                for (var i of columnasComparar) {
-                    if (fila1[columnasComparar[i]] < minClock) {
-                        nextEvent = columnasComparar[i];
-                        minClock = fila1[columnasComparar[i]];
-                    }
-                }
-                return nextEvent; //Devuelve el numerode la clumna que contiene el proximo evento, lo que te permite tambien, saber cual va a ser el proximo evento
-            }
-
-            function processEvent(next) {
-                if (next == 4) {
-                    doFinLlenada();
-                    return 1;
-                }
-                if (next == 16) {
-                    doNuevoEnganche();
-                    return 1;
-                }
-                if (fila1[next + 17] == 0) {
-                    doNuevoDesenganche(next);
-                    return 1;
-                }
-                if (fila1[next + 20] == 1) {
-                    doNuevaDescarga(next);
-                    return 1;
-                }
-            }
-
-            function doFinLlenada(picadora, acoplado) {
-
-
-            }
-
-            function doNuevoEnganche() {
-
-                // Lo de abajo genera nuevotiempo de llenado y lo coloca en el array
-                var rnd = Math.random();
-                var tiempo = genTiempoLlenadaAcoplado(rnd);
-                var proximo = tiempo + arrayToDraw[1];
-                arrayToDraw[2] = rnd;
-                arrayToDraw[3] = tiempo;
-                arrayToDraw[4] = proximo;
-            }
-
-            function doNuevoDesenganche(next) {
-                arrayToDraw[9]--;
-                arrayToDraw[next] = arrayToDraw[next] + 60;
-                arrayToDraw[next + 1] = 1;
-            }
-
-            function doNuevoEventoFin() {
-                var rnd = Math.random();
-                var tiempo = genTiempoFin(rnd);
-                var proximo = tiempo + arrayToDraw[1];
-                arrayToDraw[5] = rnd;
-                arrayToDraw[6] = tiempo;
-                arrayToDraw[7] = proximo;
-                arrayToDraw[8] = 0;
-                arrayToDraw[arrayToDraw.length - 2] = 99999;
-                arrayToDraw[arrayToDraw.length - 1] = 3;
-            }
-
+          
             //GENERADORES DE TIMPOS
             function genTiempoLlenadaAcoplado(rnd) { //exponencial negativa -9 (llenar el acoplado de maiz)
                 var median = -9;
@@ -569,11 +473,15 @@
                     }
                     conTabla = conTabla.concat("</tr>");
                 }
+                
                 $("#tabla").append(conTabla);
                 console.log(conTabla);
                 console.log("FIN DRAW");
+
             }
+
         });
+
     </script>
 
     <style>
