@@ -99,12 +99,12 @@
             var finEnganche = "-";
             var finDesenganche = "-";
             var rndDescarga = "-";
-            var tiempoDescargar = "-";
+            var tiempoDescarga = "-";
             var finDescarga = "-";
 
 
             var fila1 = [0, 0, 99999, 99999, 99999, 99999, 99999, 99999, 1, 0, 0, 0, 0, 0];
-            var arrayToDraw = [prox_evento.nombre, reloj, rndLlenada, tiempoLlenada, finLlenada, picadora1.estado, picadora1.horaFin, picadora2.estado, picadora2.horaFin, acoplado1.estado, acoplado2.estado, acoplado3.estado, acoplado4.estado, colaEnganche.length, colaDesenganche.length, empleado1.estado, finEnganche, finDesenganche, rndDescarga, tiempoDescargar, finDescarga, transportador1.estado, transportador1.horaFin, transportador2.estado, transportador2.horaFin, colaEmbutidora.length, embutidora1.estado, contadorEmbutidos]; //Array primera iteracion 28 columnas
+            var arrayToDraw = [prox_evento.nombre, reloj, rndLlenada, tiempoLlenada, finLlenada, picadora1.estado, picadora1.horaFin, picadora2.estado, picadora2.horaFin, acoplado1.estado, acoplado2.estado, acoplado3.estado, acoplado4.estado, colaEnganche.length, colaDesenganche.length, empleado1.estado, finEnganche, finDesenganche, rndDescarga, tiempoDescarga, finDescarga, transportador1.estado, transportador1.horaFin, transportador2.estado, transportador2.horaFin, colaEmbutidora.length, embutidora1.estado, contadorEmbutidos]; //Array primera iteracion 28 columnas
             var draw = [0, 0, 99999, 99999, 99999, 99999, 99999, 99999, 1, 0, 0, 0, 0, 0];
             var drawArray = []; //Array a ser mostrado, es un array de arrays
             var blankArray = [99999, 99999, 99999, 99999, 99999, 99999, 99999, 99999, 99999, 99999, 99999, 99999, 99999, 99999];
@@ -258,9 +258,56 @@
 
                     }
                     else if (prox_evento.nombre == "Fin Enganche Acoplado") {
+                        if (prox_evento.actor.type() == picadora) {
+                            rnd = Math.random;
+                            tiempoLlenada = genTiempoLlenadaAcoplado(rnd);
+                            finLlenada = reloj + tiempoLlenada;
+                            var eventoAux = new Evento("Fin Llenada Acoplado", finLlenada, prox_evento.actor);
+                            agregar_evento(eventoAux);
+                            prox_evento.actor.estado == "Llenando";
+                            prox_evento.actor.horaFin = finLlenada;
+                            prox_evento.actor.acoplado.estado == "Llenando";
+                            prox_evento.actor.horaFin = finLlenada;
+                            prox_evento.actor.acoplado.estado == "Llenando";
+                            if (colaDesenganche.length() == 0 && colaEnganche.length == 0) {
+                                empleado1.estado == "Libre";
+                            }
+                        }
+                        else {
+                            rnd = Math.random;
+                            tiempoDescarga = genTiempoLlenadaAcoplado(rnd);
+                            finDescarga = reloj + tiempoDescarga;
+                            var eventoAux = new Evento("Fin Descarga Acoplado", finDescarga, prox_evento.actor);
+                            agregar_evento(eventoAux);
+                            prox_evento.actor.estado == "Descargando";
+                            prox_evento.actor.horaFin = finDescarga;
+                            prox_evento.actor.acoplado.estado == "Descargando";
+                            prox_evento.actor.horaFin = finLlenada;
+                            prox_evento.actor.acoplado.estado == "Descargando";
+                            if (colaDesenganche.length() == 0 && colaEnganche.length == 0) {
+                                empleado1.estado == "Libre";
+                            }
+                        }
 
+                    }
 
+                    else if (prox_evento.nombre == "Fin Descarga") { //Sumar uno al contador
+                        if (colaDesenganche.length > 0 || colaEnganche.length > 0) {
+                            colaDesenganche.push(prox_evento.actor);
+                            prox_evento.actor.estado == "Esperando Desenganche";
+                            prox_evento.actor.horaFin == "-";
+                            prox_evento.actor.acoplado.estado == "Esperando Desenganche";
 
+                        }
+                        else if (colaDesenganche.length == 0 && colaEnganche.length == 0) {
+                            empleado1.estado == "Ocupado";
+                            finDesenganche = reloj + tiempoDesenganche; //Enganche
+                            var eventoAux = new Evento("Fin Desenganche Acoplado", finDesenganche, prox_evento.actor);
+                            agregar_evento(eventoAux);
+                            prox_evento.actor.estado == "Desenganchando";
+                            prox_evento.actor.horaFin = finDesenganche;
+                            prox_evento.actor.acoplado.estado == "Desenganchando";
+                        }
                     }
 
                     else if (prox_evento.nombre == "Inicio Simulacion") { //agrega los eventos que se pueden identificar al inicio a la lista de eventos
@@ -281,10 +328,8 @@
 
                     }
 
-
-                    //Ultima parte del evento doSimulacion()
-                    doIteration();
-                    reloj = arrayToDraw[1];
+                    //Ultima parte del evento doSimulacion()  
+                    cantidad++;
                     if (reloj > 600) {
                         arrayToDraw = fila1.slice()
                         arrayToDraw[0] = 1;
@@ -306,7 +351,7 @@
                     var finEnganche = "-";
                     var finDesenganche = "-";
                     var rndDescarga = "-";
-                    var tiempoDescargar = "-";
+                    var tiempoDescarga = "-";
                     var finDescarga = "-";
                 }
 
