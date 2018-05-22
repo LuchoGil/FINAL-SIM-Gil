@@ -102,6 +102,24 @@
             var tiempoDescarga = "-";
             var finDescarga = "-";
 
+            //CODIGO EXTRA                        
+            var cola_eventos = [];
+            var tiempo = tiempo;
+            var reloj = 0.0;
+            var index_columnas = 0;
+            var mostrar_desde = mostrar_desde;
+            var iteraciones = iteraciones;
+            var tiempo_grua = tiempo_grua;
+            var capacidad_grua = capacidad_grua;
+            var min_serv_grua = min_serv_grua;
+            var cont_abandonos = 0;
+            var cont_atendidos = 0;
+            var acum_ganancias = 0.0;
+            var acum_permanencia = 0.0;
+            var objetos_temporales = [];
+
+            var prox_evento = new Evento("Inicio Simulacion", 0);
+            cola_eventos.push(prox_evento);
 
             var fila1 = [0, 0, 99999, 99999, 99999, 99999, 99999, 99999, 1, 0, 0, 0, 0, 0];
             var arrayToDraw = [prox_evento.nombre, reloj, rndLlenada, tiempoLlenada, finLlenada, picadora1.estado, picadora1.horaFin, picadora2.estado, picadora2.horaFin, acoplado1.estado, acoplado2.estado, acoplado3.estado, acoplado4.estado, colaEnganche.length, colaDesenganche.length, empleado1.estado, finEnganche, finDesenganche, rndDescarga, tiempoDescarga, finDescarga, transportador1.estado, transportador1.horaFin, transportador2.estado, transportador2.horaFin, colaEmbutidora.length, embutidora1.estado, contadorEmbutidos]; //Array primera iteracion 28 columnas
@@ -126,21 +144,6 @@
                 window.open("enunciado.html");
             });
 
-            //CODIGO EXTRA                        
-            var cola_eventos = [];
-            var tiempo = tiempo;
-            var reloj = 0.0;
-            var index_columnas = 0;
-            var mostrar_desde = mostrar_desde;
-            var iteraciones = iteraciones;
-            var tiempo_grua = tiempo_grua;
-            var capacidad_grua = capacidad_grua;
-            var min_serv_grua = min_serv_grua;
-            var cont_abandonos = 0;
-            var cont_atendidos = 0;
-            var acum_ganancias = 0.0;
-            var acum_permanencia = 0.0;
-            var objetos_temporales = [];
 
             //function simular() {
             //tabla = pd.DataFrame()
@@ -150,10 +153,6 @@
             fila_actual = [];
             fin_mostrar = false;
             ultima_fila = false;
-
-            var eventoInicio = new Evento("Inicio Simulacion", 0, null);
-            agregar_evento(eventoInicio);
-            //}
 
 
             //FUNCIONES
@@ -168,9 +167,6 @@
                 fila_actual = [];
                 fin_mostrar = false;
                 ultima_fila = false;
-
-                var eventoInicio = new Evento("Inicio Simulacion", 0);
-                cola_eventos.append(evento);
 
                 while (reloj <= minsSimular) {
                     prox_evento = cola_eventos.pop(0);
