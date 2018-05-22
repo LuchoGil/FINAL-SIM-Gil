@@ -113,7 +113,7 @@
             var columnasComparar = [4, 16, 17, 20]; //4 fin prox llenada de acoplado - 16 fin enganche prox - 17 fin desenganche proximo - 20 fin descarga en embutidora
             var primero = 0;
             var urll = window.location.href;
-            var header = "<tr id='hder' class='cabeza'><th>Evento</th><th>Reloj</th><th>RND</th><th>Tiempo</th><th>Proximo</th><th>RND</th><th>Tiempo</th><th>Proximo</th><th>Estado Servidor</th><th>Cola Normal</th><th>Cola Prioridad</th><th>Cantidad Atendidos</th><th>Cant Salida Tardanza</th><th>Cant Salida Exceso</th>"
+            var header = "<tr id='hder' class='cabeza'><th>Evento</th><th>Reloj</th><th>RND</th><th>Tiempo Llenada</th><th>Fin Llenada</th><th>P1 Estado</th><th>P1 Fin</th><th>P2 Estado</th><th>P2 Fin </th>    <th>A1 Estado</th> <th>A1 Fin</th> <th>A2 Estado</th> <th>A2 Fin</th> <th>A3 Estado</th> <th>A3 Fin</th> <th>A4 Estado</th> <th>A4 Fin</th>  <th>C Enganches</th> <th>C Desenganchs</th> <th>E1 Estado</th>  <th>Fin Enganche</th> <th>Fin Desenganche</th> <th>RND</th> <th>T Descarga</th> <th>Fin Descarga</th> <th>T1 Estado</th> <th>T1 Fin</th> <th>T2 Estado</th> <th>T2 Fin</th> <th>Cola Embutidora</th> <th>Emb Estado</th> <th>Cantidad Embutidos</th>"
             var aftheader = "</tr>";
 
             $("#btn1").click(function () {
@@ -141,9 +141,6 @@
             var acum_ganancias = 0.0;
             var acum_permanencia = 0.0;
             var objetos_temporales = [];
-            var columnas = ["Estado", "Reloj", "RND P1", "Tiempo lleg. P1", "Prox. lleg. P1", "RND P2", "Tiempo lleg. P2", "Prox. lleg. P2", "i de llegada",
-                "Destino traslado", "Fin traslado", "Estado grua", "Cola P1", "Cola P2", "Acum. Ganancias",
-                "Cont. Perdidos", "Cont. Atendidos", "Acum. Permanencia"];
 
             //function simular() {
             //tabla = pd.DataFrame()
@@ -292,6 +289,10 @@
                     }
 
                     else if (prox_evento.nombre == "Fin Descarga") { //Sumar uno al contador
+                        contadorEmbutidos++;
+                        if (colaEmbutidora.length() == 0) {
+                            embutidora1.estado == "Libre";
+                        }
                         if (colaDesenganche.length > 0 || colaEnganche.length > 0) {
                             colaDesenganche.push(prox_evento.actor);
                             prox_evento.actor.estado == "Esperando Desenganche";
@@ -328,21 +329,17 @@
 
                     }
 
-                    //Ultima parte del evento doSimulacion()  
-                    cantidad++;
-                    if (reloj > 600) {
-                        arrayToDraw = fila1.slice()
-                        arrayToDraw[0] = 1;
-                        arrayToDraw[1] = 600;
-                    }
-                    console.log(arrayToDraw);
-                    if (reloj >= desdeMin && contador <= cantidad) {
-                        drawIteration();
+                    //Ultima parte del evento doSimulacion() 
 
+                    if (reloj > 600) {
+                        drawIteration();
+                        break;
+                    }
+                    //console.log(arrayToDraw);
+                    else if (reloj >= desdeMin && contador <= cantidad) {
+                        drawIteration();
                         contador++;
                     }
-
-                    drawIteration();
 
                     // Volvemos las variables a su estado original para que se muestren bien la proxima iteracion                    
                     var rndLlenada = "-";
@@ -357,12 +354,13 @@
 
                 //Dibujar tabla al sair del while
                 drawTable();
-                $("#jose1").text(arrayToDraw[11]);
-                $("#jose2").text(arrayToDraw[12]);
-                $("#jose3").text(arrayToDraw[13]);
+
+                //???
+                //$("#jose1").text(arrayToDraw[11]);
+                //$("#jose2").text(arrayToDraw[12]);
+                //$("#jose3").text(arrayToDraw[13]);
+
             }
-
-
 
             function agregar_evento(eventos) {
                 if (type(eventos) != list) {
@@ -397,40 +395,40 @@
 
             function drawIteration() {
                 draw = arrayToDraw.slice();   //draw es el array que se va a dibujar                            
-                for (i in draw) {
-                    switch (i) { // Cambiar if por switch
-                        case 0: defineEvent(); break; //Nombre del evento que ocurre
-                        case 1: ; // deberia llegarle el reloj o ya estar definido de antes
-                        case 2: ; //
-                        case 3: ;
-                        case 4: ;
-                        case 5: ;
-                        case 6: ;
-                        case 7: ;
-                        case 8: ;
-                        case 9: ;
-                        case 10: ;
-                        case 11: ;
-                        case 12: ;
-                        case 13: ;
-                        case 14: ;
-                        case 15: ;
-                        case 16: ;
-                        case 17: ;
-                        case 18: ;
-                        case 19: ;
-                        case 28: ;
-                    }
-                    //var cambio = false;
-                    //if (i == 0) { defineEvent(); cambio = true; }
-                    //todas las definiciones necesarias a considerar en el array                    
-                    //if (i == 8) { defineEstadoServer(); cambio = true; }
-                    //if (i > 14 && !cambio) {
-                    //if (draw[i] == 0) { draw[i] = "C"; cambio = true; }
-                    //if (draw[i] == 1) { draw[i] = "EV"; cambio = true; }
-                    //if (draw[i] == 2) { draw[i] = "CP"; cambio = true; }
-                    //if (draw[i] == 3) { draw[i] = "SA"; cambio = true; }
-                }
+                //for (i in draw) {
+                //  switch (i) { // Cambiar if por switch
+                //    case 0: defineEvent(); break; //Nombre del evento que ocurre
+                //    case 1: ; // deberia llegarle el reloj o ya estar definido de antes
+                //   case 2: ; //
+                //   case 3: ;
+                //  case 4: ;
+                //  case 5: ;
+                //   case 6: ;
+                //  case 7: ;
+                //  case 8: ;
+                //  case 9: ;
+                // case 10: ;
+                //  case 11: ;
+                //  case 12: ;
+                //  case 13: ;
+                //   case 14: ;
+                //   case 15: ;
+                //  case 16: ;
+                //   case 17: ;
+                //   case 18: ;
+                //   case 19: ;
+                //  case 28: ;
+                //}
+                //var cambio = false;
+                //if (i == 0) { defineEvent(); cambio = true; }
+                //todas las definiciones necesarias a considerar en el array                    
+                //if (i == 8) { defineEstadoServer(); cambio = true; }
+                //if (i > 14 && !cambio) {
+                //if (draw[i] == 0) { draw[i] = "C"; cambio = true; }
+                //if (draw[i] == 1) { draw[i] = "EV"; cambio = true; }
+                //if (draw[i] == 2) { draw[i] = "CP"; cambio = true; }
+                //if (draw[i] == 3) { draw[i] = "SA"; cambio = true; }
+                //}
                 drawArray.push(draw.slice());
             }
 
