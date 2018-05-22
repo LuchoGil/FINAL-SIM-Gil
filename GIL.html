@@ -9,7 +9,6 @@
         $(document).ready(function () {
 
             //Clases y variables globales
-
             class Acoplado {
                 constructor(numero, estado, tractor) {
                     this.numero = numero;
@@ -40,6 +39,20 @@
                     this.numero = numero;
                     this.estado = estado;
                 }
+                trabajar() {
+                    // ----- Cola picadora para enganchar y hay acoplados libre -> Engancha Picadora
+                    // Cola picadora para enganchar y no hay acoplados libres y hay cola transportadores para desenganchar -> Desengancha transportadore
+                    // Cola picadora para enganchar y no hay acoplados libres y no hay cola transportadores para desenganchar y hay cola transportadores para enganchar y hay acoplados llenos -> Engancha transportador
+                    // Cola picadora para enganchar y no hay acoplados libres y no hay cola transportadores para desenganchar y hay cola transportadores para enganchar y no hay acoplados llenos y hay picadoras para desenganchar-> Desengancha picadora 
+                    // Cola picadora para enganchar y no hay acoplados libres y no hay cola transportadores para desenganchar y hay cola transportadores para enganchar y no hay acoplados llenos y no hay picadoras para desenganchar -> Empleado libre 
+                    // ---- No hay cola picadora para enganchar y hay cola transportador para enganchar  y hay acoplado llenos -> Engancha transportador                
+                    // ---- No hay cola picadora para enganchar y hay cola picadora para desenganchar -> Desengancha picadora
+                    // ---- No hay cola picadora para enganchar y hay cola transportador para desenganchar ->Desenganha transportador   
+                    // else empleado libre
+
+                    return true;
+                }
+
             }
 
             class Embutidora {
@@ -122,11 +135,11 @@
 
             var fila1 = [0, 0, 99999, 99999, 99999, 99999, 99999, 99999, 1, 0, 0, 0, 0, 0];
             var arrayToDraw = [proxEvento.nombre, reloj, rndLlenada, tiempoLlenada, finLlenada, picadora1.estado,
-                picadora1.horaFin, picadora2.estado, picadora2.horaFin, acoplado1.estado, acoplado2.estado,
-                acoplado3.estado, acoplado4.estado, colaEnganche.length, colaDesenganche.length, empleado1.estado,
+            picadora1.horaFin, picadora2.estado, picadora2.horaFin, acoplado1.estado, acoplado2.estado,
+            acoplado3.estado, acoplado4.estado, colaEnganche.length, colaDesenganche.length, empleado1.estado,
                 finEnganche, finDesenganche, rndDescarga, tiempoDescarga, finDescarga, transportador1.estado,
-                transportador1.horaFin, transportador2.estado, transportador2.horaFin, colaEmbutidora.length,
-                embutidora1.estado, contadorEmbutidos
+            transportador1.horaFin, transportador2.estado, transportador2.horaFin, colaEmbutidora.length,
+            embutidora1.estado, contadorEmbutidos
             ]; //Array primera iteracion 28 columnas
             var draw = [0, 0, 99999, 99999, 99999, 99999, 99999, 99999, 1, 0, 0, 0, 0, 0];
             var drawArray = []; //Array a ser mostrado, es un array de arrays
@@ -219,8 +232,8 @@
                             acopladosLlenos.push(proxEvento.actor.acoplado);
                             proxEvento.actor.acoplado = null;
                         } else if (proxEvento.actor.constructor.name == "Transportador" && (colaEnganche.length >
-                                0 ||
-                                colaDesenganche.length > 0)) { // Si se desengancha un Transportador y hay cola para enganchar o desenganchar
+                            0 ||
+                            colaDesenganche.length > 0)) { // Si se desengancha un Transportador y hay cola para enganchar o desenganchar
                             colaEnganche.push(proxEvento.actor);
                             proxEvento.actor.estado = "Esperando Enganche";
                             proxEvento.actor.horaFin = "-";
@@ -378,7 +391,7 @@
 
 
             function doIteration() {
-                if (reloj == 0) {} else {
+                if (reloj == 0) { } else {
                     fila1 = arrayToDraw.slice();
                     var nextEvent = getNextEvent();
                     arrayToDraw[0] = nextEvent;
