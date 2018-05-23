@@ -281,7 +281,7 @@
                             proxEvento.actor.estado = "Enganchado " + proxEvento.actor.acoplado.numero;
                             empleado1.trabajar();
                             if (colaemutidora1.length == 0) {
-                                rndDescarga = Math.random;
+                                rndDescarga = Math.random();
                                 tiempoDescarga = genTiempoFinEmbutir(rndDescarga);
                                 finDescarga = reloj + tiempoDescarga;
                                 var eventoAux = new Evento("Fin Descarga Acoplado", finDescarga, proxEvento.actor);
@@ -296,7 +296,7 @@
                             proxEvento.actor.acoplado = "Enganchado";
                             proxEvento.actor.estado = "Enganchado " + proxEvento.actor.acoplado.numero;
                             empleado1.trabajar();
-                            rndLlenada = Math.random;
+                            rndLlenada = Math.random();
                             tiempoLlenada = genTiempoLlenadaAcoplado(rndLlenada);
                             finLlenada = reloj + tiempoLlenada;
                             var eventoAux = new Evento("Fin Llenada Acoplado", finLlenada, proxEvento.actor);
@@ -313,7 +313,7 @@
                         }
                         else {
                             t = colaemutidora1.pop();
-                            rndDescarga = Math.random;
+                            rndDescarga = Math.random();
                             tiempoDescarga = genTiempoFinEmbutir(rndDescarga);
                             finDescarga = reloj + tiempoDescarga;
                             var eventoAux = new Evento("Fin Descarga Acoplado", finDescarga, t);
