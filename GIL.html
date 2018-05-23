@@ -30,7 +30,7 @@
 
             }
 
-            class Transportador extends Tractor { //tractor que transportar a la emutidora1           
+            class Transportador extends Tractor { //tractor que transportar a la embutidora1           
 
             }
 
@@ -132,7 +132,7 @@
                 }
             }
 
-            class emutidora1 {
+            class Embutidora {
                 constructor(numero, estado) {
                     this.numero = numero;
                     this.estado = estado;
@@ -165,7 +165,7 @@
 
             var transportadores = [transportador1, transportador2];
 
-            var embutidora1 = new emutidora1(1, "Ocupada");
+            var embutidora1 = new Embutidora(1, "Ocupada");
 
             var empleado1 = new Empleado(1, "Libre");
 
@@ -210,7 +210,7 @@
             var urll = window.location.href;
 
             var header =
-                "<tr id='hder' class='cabeza'><th>Evento</th><th>Reloj</th><th>RND</th><th>Tiempo Llenada</th><th>Fin Llenada</th><th>P1 Estado</th>< th > P1 Fin</th> <th>P2 Estado</th> <th>P2 Fin </th> <th>C Enganche P</th> <th>C Desenganche P</th> <th>A1 Estado</th> <th>A2 Estado</th> <th>A3 Estado</th> <th>A4 Estado</th> <th>A Libres</th> <th>A Llenos</th> <th>Empleado</th> <th>Fin Enganche</th> <th>Fin Desenganche</th> <th>RND</th> <th>T Descarga</th> <th>Fin Descarga</th> <th>T1 Estado</th> <th>T1 Fin</th> <th>T2 Estado</th> <th>T2 Fin</th> <th>C Enganche Transportadores</th> <th>C Desenganche Transportadores</th> <th>Cola emutidora1</th> <th>Emb Estado</th> <th>Cantidad Embutidos</th>";
+                "<tr id='hder' class='cabeza'><th>Evento</th><th>Reloj</th><th>RND</th><th>Tiempo Llenada</th><th>Fin Llenada</th><th>P1 Estado</th>< th > P1 Fin</th> <th>P2 Estado</th> <th>P2 Fin </th> <th>C Enganche P</th> <th>C Desenganche P</th> <th>A1 Estado</th> <th>A2 Estado</th> <th>A3 Estado</th> <th>A4 Estado</th> <th>A Libres</th> <th>A Llenos</th> <th>Empleado</th> <th>Fin Enganche</th> <th>Fin Desenganche</th> <th>RND</th> <th>T Descarga</th> <th>Fin Descarga</th> <th>T1 Estado</th> <th>T1 Fin</th> <th>T2 Estado</th> <th>T2 Fin</th> <th>C Enganche Transportadores</th> <th>C Desenganche Transportadores</th> <th>Cola Embutidora</th> <th>Emb Estado</th> <th>Cantidad Embutidos</th>";
             var aftheader = "</tr>";
 
             //Botones
@@ -289,7 +289,7 @@
                                 proxEvento.actor.estado = "Descargando";
                                 proxEvento.actor.horaFin = finDescarga;
                                 proxEvento.actor.acoplado.estado = "Descargando";
-                                emutidora1.estado = "Ocupada";
+                                embutidora1.estado = "Ocupada";
                             }
                         }
                         else {
@@ -309,7 +309,7 @@
                     } else if (proxEvento.nombre == "Fin Descarga") {
                         contadorEmbutidos++; //Sumar uno al contador
                         if (colaEmbutidora.length == 0) {
-                            emutidora1.estado = "Libre";
+                            embutidora1.estado = "Libre";
                         }
                         else {
                             t = colaEmbutidora.pop();
@@ -493,7 +493,7 @@
                 return valor;
             }
 
-            function genTiempoFinEmbutir(rnd) { //uniforme  media 4.5 min con desviacion 0.5 min (descargar en emutidora1)
+            function genTiempoFinEmbutir(rnd) { //uniforme  media 4.5 min con desviacion 0.5 min (descargar en embutidora1)
                 var tiempo = 4.5 + (rnd * 0.5);
                 return tiempo;
             }
@@ -594,23 +594,7 @@
     <button type="button" class="btn" id="btn3">Ver Enunciado</button>
     <br>
     <div style="height: 750px; overflow-y: auto; width:100%;">
-        <table id="tabla" class="table table-hover table-mc-light-blue">
-            <!-- <tr id="hder"> -->
-            <!-- <th>Evento</th> -->
-            <!-- <th>Reloj</th> -->
-            <!-- <th>RND</th> -->
-            <!-- <th>Tiempo</th> -->
-            <!-- <th>Proximo</th> -->
-            <!-- <th>RND</th> -->
-            <!-- <th>Tiempo</th> -->
-            <!-- <th>Proximo</th> -->
-            <!-- <th>Estado Servidor</th> -->
-            <!-- <th>Cola Normal</th> -->
-            <!-- <th>Cola Prioridad</th> -->
-            <!-- <th>Cantidad Atendidos</th> -->
-            <!-- <th>Cant Salida Tardanza</th> -->
-            <!-- <th>Cant Salida Exceso</th> -->
-            <!--  -->
+        <table id="tabla" class="table table-hover table-mc-light-blue">            
         </table>
     </div>
 
