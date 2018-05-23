@@ -299,7 +299,7 @@
                                 rndDescarga = Number(Math.random()).toPrecision(3);
                                 tiempoDescarga = Number(genTiempoFinEmbutir(rndDescarga));
                                 finDescarga = reloj + tiempoDescarga;
-                                var eventoAux = new Evento("Fin Descarga", finDescarga, proxEvento.actor);
+                                var eventoAux = new Evento("Fin Descarga", Number(finDescarga), proxEvento.actor);
                                 agregarEvento(eventoAux);
                                 proxEvento.actor.estado = "Descargando";
                                 proxEvento.actor.horaFin = finDescarga;
@@ -322,7 +322,7 @@
                             rndLlenada = Number(Math.random()).toPrecision(3);
                             tiempoLlenada = Number(genTiempoLlenadaAcoplado(rndLlenada));
                             finLlenada = (reloj + tiempoLlenada).toPrecision(3);
-                            var eventoAux = new Evento("Fin Llenada Acoplado", finLlenada, proxEvento.actor);
+                            var eventoAux = new Evento("Fin Llenada Acoplado", Number(finLlenada),proxEvento.actor);
                             agregarEvento(eventoAux);
                             proxEvento.actor.estado = "Llenando";
                             proxEvento.actor.horaFin = finLlenada;
@@ -361,13 +361,13 @@
                         var eventosInicio = [];
                         for (var p of picadoras) {
                             if (p.horaFin != "-") {
-                                var eventoInicio = new Evento("Fin Llenada Acoplado", p.horaFin, p);
+                                var eventoInicio = new Evento("Fin Llenada Acoplado", Number(p.horaFin), p);
                                 eventosInicio.push(eventoInicio);
                             }
                         }
                         for (var t of transportadores) {
                             if (t.horaFin != "-") {
-                                var eventoInicio = new Evento("Fin Descarga", t.horaFin, t);
+                                var eventoInicio = new Evento("Fin Descarga", Number(t.horaFin), t);
                                 eventosInicio.push(eventoInicio);
                             }
                         }
