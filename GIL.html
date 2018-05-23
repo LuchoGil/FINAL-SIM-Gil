@@ -46,7 +46,8 @@
                         if (colaEnganchePicadoras.length > 0 && acopladosLibres.length > 0) { //Revisado
                             empleado1.estado = "Ocupado";
                             var p = colaEnganchePicadoras.pop();
-                            finEnganche = reloj + tiempoEnganche;
+                            finEnganche = Number(reloj + tiempoEnganche);
+                            finEnganche = Number(finEnganche);
                             var eventoAux = new Evento("Fin Enganche Acoplado", finEnganche, p);
                             agregarEvento(eventoAux);
                             p.acoplado = acopladosLibres.pop();
@@ -58,7 +59,8 @@
                         else if (colaEnganchePicadoras.length > 0 && acopladosLibres.length == 0 && colaDesengancheTransportadores.length > 0) {
                             empleado1.estado = "Ocupado";
                             var t = colaDesengancheTransportadores.pop();
-                            finDesenganche = reloj + tiempoDesenganche; //Enganche
+                            finDesenganche = Number(reloj + tiempoDesenganche);
+                            finDesenganche = Number(finDesenganche);
                             var eventoAux = new Evento("Fin Desenganche Acoplado", finDesenganche, t);
                             agregarEvento(eventoAux);
                             t.acoplado.estado = "Desenganchando";
@@ -69,7 +71,8 @@
                         else if (colaEnganchePicadoras.length > 0 && acopladosLibres.length == 0 && colaDesengancheTransportadores.length == 0 && acopladosLlenos.length > 0 && colaEngancheTransportadores.length > 0) {// Revisado
                             empleado1.estado = "Ocupado";
                             var t = colaEngancheTransportadores.pop();
-                            finEnganche = reloj + tiempoEnganche;
+                            finEnganche = Number(reloj + tiempoEnganche);
+                            finEnganche = Number(finEnganche);
                             var eventoAux = new Evento("Fin Enganche Acoplado", finEnganche, t);
                             agregarEvento(eventoAux);
                             t.acoplado = acopladosLlenos.pop();
@@ -81,7 +84,8 @@
                         else if (colaEnganchePicadoras.length > 0 && acopladosLibres.length == 0 && colaDesengancheTransportadores.length > 0 && acopladosLlenos.length == 0 && colaDesenganchePicadoras.length > 0) {
                             empleado1.estado = "Ocupado";
                             var p = colaDesenganchePicadoras.pop();
-                            finDesenganche = reloj + tiempoDesenganche; //Enganche
+                            finDesenganche = Number(reloj + tiempoDesenganche);
+                            finDesenganche = Number(finDesenganche); //Enganche
                             var eventoAux = new Evento("Fin Desenganche Acoplado", finDesenganche, p);
                             agregarEvento(eventoAux);
                             p.acoplado.estado = "Desenganchando";
@@ -97,7 +101,8 @@
                         else if (colaEnganchePicadoras.length == 0 && colaEngancheTransportadores.length > 0 && acopladosLlenos.length > 0) {
                             empleado1.estado = "Ocupado";
                             var t = colaEngancheTransportadores.pop();
-                            finEnganche = reloj + tiempoEnganche;
+                            finEnganche = Number(reloj + tiempoEnganche);
+                            finEnganche = Number(finEnganche);
                             var eventoAux = new Evento("Fin Enganche Acoplado", finEnganche, t);
                             agregarEvento(eventoAux);
                             t.acoplado = acopladosLlenos.pop();
@@ -109,7 +114,8 @@
                         else if (colaEnganchePicadoras.length == 0 && colaDesenganchePicadoras.length > 0) {
                             empleado1.estado = "Ocupado";
                             var p = colaDesenganchePicadoras.pop();
-                            finDesenganche = reloj + tiempoDesenganche; //Enganche
+                            finDesenganche = Number(reloj + tiempoDesenganche);
+                            finDesenganche = Number(finDesenganche); //Enganche
                             var eventoAux = new Evento("Fin Desenganche Acoplado", finDesenganche, p);
                             agregarEvento(eventoAux);
                             p.acoplado.estado = "Desenganchando";
@@ -120,7 +126,8 @@
                         else if (colaEnganchePicadoras.length == 0 && colaDesengancheTransportadores.length > 0) {
                             empleado1.estado = "Ocupado";
                             var t = colaDesengancheTransportadores.pop();
-                            finDesenganche = reloj + tiempoDesenganche; //Enganche
+                            finDesenganche = Number(reloj + tiempoDesenganche);
+                            finDesenganche = Number(finDesenganche); //Enganche
                             var eventoAux = new Evento("Fin Desenganche Acoplado", finDesenganche, t);
                             agregarEvento(eventoAux);
                             t.acoplado.estado = "Desenganchando";
@@ -155,18 +162,17 @@
             var acoplado1 = new Acoplado(1, "Llenando", picadora1); //Llenando, Lleno, Libre
             var acoplado2 = new Acoplado(2, "Llenando", picadora2);
             var acoplado3 = new Acoplado(3, "Descargando", transportador1);
-            var acoplado4 = new Acoplado(4, "Lleno", transportador2);
+            var acoplado4 = new Acoplado(4, "Esperando Descarga", transportador2);
 
-            var acoplados = [acoplado1, acoplado2, acoplado3, acoplado4];
-            //  var acoplados = [acoplado1, acoplado2, acoplado3, acoplado4];
+            var acoplados = [acoplado1, acoplado2, acoplado3, acoplado4];           
 
             var picadora1 = new Picadora(1, "Llenando", 3, acoplado1);
             var picadora2 = new Picadora(2, "Llenando", 5, acoplado2);
 
-            var picadoras = [picadora1, picadora2]
+            var picadoras = [picadora1, picadora2];
 
             var transportador1 = new Transportador(1, "Descargando", 4, acoplado3);
-            var transportador2 = new Transportador(2, "Esperando Descarga", "-", acoplado4);
+            var transportador2 = new Transportador(2, "Esperando Descarga 4", "-", acoplado4);
 
             var transportadores = [transportador1, transportador2];
 
@@ -181,21 +187,20 @@
             var colaEngancheTransportadores = [];
             var colaDesengancheTransportadores = [];
             var acopladosLibres = [];
-            var acopladosLlenos = [acoplado4];
+            var acopladosLlenos = [];
 
-            var contadorEmbutidos = 0; //Lo que se debemostrar al final
-            var reloj = 0;
+            var contadorEmbutidos = 0; //Lo que se debe mostrar al final
 
             //Cambiar para obtener otros tiempos
-            var tiempoEnganche = 20;
-            var tiempoDesenganche = 10;
+            var tiempoEnganche = 5;
+            var tiempoDesenganche = 2;
 
 
             var rndLlenada = "-";
             var tiempoLlenada = "-";
             var finLlenada = "-";
-            var finEnganche = "-";
-            var finDesenganche = "-";
+            var finEnganche = -1;
+            var finDesenganche = -1;
             var rndDescarga = "-";
             var tiempoDescarga = "-";
             var finDescarga = "-";
@@ -208,12 +213,9 @@
             var proxEvento = new Evento("Inicio Simulacion", 0);
             colaEventos.push(proxEvento);
 
-            var arrayToDraw = [proxEvento.nombre, reloj, rndLlenada, tiempoLlenada, finLlenada, picadora1.estado, picadora1.horaFin, picadora2.estado, picadora2.horaFin, colaEnganchePicadoras.length, colaDesenganchePicadoras.length, acoplado1.estado, acoplado2.estado, acoplado3.estado, acoplado4.estado, acopladosLibres.length, acopladosLlenos.length, empleado1.estado, finEnganche, finDesenganche, rndDescarga, tiempoDescarga, finDescarga, transportador1.estado, transportador1.horaFin, transportador2.estado, transportador2.horaFin, colaEngancheTransportadores, colaDesengancheTransportadores, colaEmbutidora.length, embutidora1.estado, contadorEmbutidos]; //Array primera iteracion 28 columnas
             var draw = [0, 0, 99999, 99999, 99999, 99999, 99999, 99999, 1, 0, 0, 0, 0, 0];
             var drawArray = []; //Array a ser mostrado, es un array de arrays
-
             var urll = window.location.href;
-
             var header =
                 "<tr id='hder' class='cabeza'><th>Evento</th><th>Reloj</th><th>RND</th><th>Tiempo Llenada</th><th>Fin Llenada</th> <th>P1 Estado</th> <th> P1 Fin </th> <th>P2 Estado</th> <th>P2 Fin </th> <th>C Enganche P</th> <th>C Desenganche P</th> <th>A1 Estado</th> <th>A2 Estado</th> <th>A3 Estado</th> <th>A4 Estado</th> <th>A Libres</th> <th>A Llenos</th> <th>Empleado</th> <th>Fin Enganche</th> <th>Fin Desenganche</th> <th>RND</th> <th>T Descarga</th> <th>Fin Descarga</th> <th>T1 Estado</th> <th>T1 Fin</th> <th>T2 Estado</th> <th>T2 Fin</th> <th>C Enganche Transportadores</th> <th>C Desenganche Transportadores</th> <th>Cola Embutidora</th> <th>Emb Estado</th> <th>Cantidad Embutidos</th>";
             var aftheader = "</tr>";
@@ -232,12 +234,24 @@
             //FUNCIONES
             function doSimulation() {
 
-                var minsSimular = $("#minutos").val();
+                var rndLlenada = "-";
+                var tiempoLlenada = "-";
+                var finLlenada = "-";
+                var finEnganche = -1;
+                var finDesenganche = -1;
+                var rndDescarga = "-";
+                var tiempoDescarga = "-";
+                var finDescarga = "-";
+
+                var arrayToDraw = [proxEvento.nombre, reloj, rndLlenada, tiempoLlenada, finLlenada, picadora1.estado, picadora1.horaFin, picadora2.estado, picadora2.horaFin, colaEnganchePicadoras.length, colaDesenganchePicadoras.length, acoplado1.estado, acoplado2.estado, acoplado3.estado, acoplado4.estado, acopladosLibres.length, acopladosLlenos.length, empleado1.estado, finEnganche, finDesenganche, rndDescarga, tiempoDescarga, finDescarga, transportador1.estado, transportador1.horaFin, transportador2.estado, transportador2.horaFin, colaEngancheTransportadores.length, colaDesengancheTransportadores.length, colaEmbutidora.length, embutidora1.estado, contadorEmbutidos]; //Array primera iteracion 33
+
+
+                var minSimular = $("#minutos").val();
                 var cantidad = $("#filas").val();
                 var desdeMin = $("#desde").val();
                 var contador = 0; //contador de filas
 
-                while (reloj <= minsSimular) {
+                while (reloj <= minSimular) {
 
                     proxEvento = colaEventos.pop(0);
                     reloj = proxEvento.hora;
@@ -282,8 +296,8 @@
                             empleado1.trabajar();
                             //Ahora si esto es lo que faltaba
                             if (colaEmbutidora.length == 0) {
-                                rndDescarga = Number(Math.random());
-                                tiempoDescarga = genTiempoFinEmbutir(rndDescarga);
+                                rndDescarga = Number(Math.random()).toPrecision(3);
+                                tiempoDescarga = Number(genTiempoFinEmbutir(rndDescarga));
                                 finDescarga = reloj + tiempoDescarga;
                                 var eventoAux = new Evento("Fin Descarga", finDescarga, proxEvento.actor);
                                 agregarEvento(eventoAux);
@@ -305,9 +319,9 @@
                             proxEvento.actor.horaFin = "-";
                             empleado1.trabajar();
                             // Esto era lo que faltaba
-                            rndLlenada = Number(Math.random());
-                            tiempoLlenada = genTiempoLlenadaAcoplado(rndLlenada);
-                            finLlenada = reloj + tiempoLlenada;
+                            rndLlenada = Number(Math.random()).toPrecision(3);
+                            tiempoLlenada = Number(genTiempoLlenadaAcoplado(rndLlenada));
+                            finLlenada = (reloj + tiempoLlenada).toPrecision(3);
                             var eventoAux = new Evento("Fin Llenada Acoplado", finLlenada, proxEvento.actor);
                             agregarEvento(eventoAux);
                             proxEvento.actor.estado = "Llenando";
@@ -331,7 +345,8 @@
                         else {
                             t = colaEmbutidora.pop();
                             rndDescarga = Number(Math.random());
-                            tiempoDescarga = genTiempoFinEmbutir(rndDescarga);
+                            rndDescarga = rndDescarga.toPrecision(3)
+                            tiempoDescarga = Number(genTiempoFinEmbutir(rndDescarga));
                             finDescarga = reloj + tiempoDescarga;
                             var eventoAux = new Evento("Fin Descarga", finDescarga, t);
                             agregarEvento(eventoAux);
@@ -361,7 +376,7 @@
                     }
 
                     //Ultima parte del evento doSimulacion() 
-                    if (reloj > 600) {
+                    if (reloj > minSimular) {
                         drawIteration();
                         break;
                     }
@@ -375,11 +390,25 @@
                     var rndLlenada = "-";
                     var tiempoLlenada = "-";
                     var finLlenada = "-";
-                    var finEnganche = "-";
-                    var finDesenganche = "-";
+                    var finEnganche = -1;
+                    var finDesenganche = -1;
                     var rndDescarga = "-";
                     var tiempoDescarga = "-";
                     var finDescarga = "-";
+
+                    function drawIteration() {
+                        if (finEnganche == -1) {
+                            finEnganche = String("-");
+                        }
+                        else{
+                            finEnganche = Number(finEnganche);
+                        }
+
+                        draw = [proxEvento.nombre, reloj, rndLlenada, tiempoLlenada, finLlenada, picadora1.estado, picadora1.horaFin, picadora2.estado, picadora2.horaFin, colaEnganchePicadoras.length, colaDesenganchePicadoras.length, acoplado1.estado, acoplado2.estado, acoplado3.estado, acoplado4.estado, acopladosLibres.length, acopladosLlenos.length, empleado1.estado, finEnganche, finDesenganche, rndDescarga, tiempoDescarga, finDescarga, transportador1.estado, transportador1.horaFin, transportador2.estado, transportador2.horaFin, colaEngancheTransportadores.length, colaDesengancheTransportadores.length, colaEmbutidora.length, embutidora1.estado, contadorEmbutidos];
+                        drawArray.push(draw);
+                    }
+
+
                 }
 
                 //Dibujar tabla al sair del while
@@ -401,26 +430,6 @@
             }
 
 
-            function drawIteration() {
-                draw = [proxEvento.nombre, reloj, rndLlenada, tiempoLlenada, finLlenada, picadora1.estado, picadora1.horaFin, picadora2.estado, picadora2.horaFin, colaEnganchePicadoras.length, colaDesenganchePicadoras.length, acoplado1.estado, acoplado2.estado, acoplado3.estado, acoplado4.estado, acopladosLibres.length, acopladosLlenos.length, empleado1.estado, finEnganche, finDesenganche, rndDescarga, tiempoDescarga, finDescarga, transportador1.estado, transportador1.horaFin, transportador2.estado, transportador2.horaFin, colaEngancheTransportadores, colaDesengancheTransportadores, colaEmbutidora.length, embutidora1.estado, contadorEmbutidos];
-                drawArray.push(draw);
-            }
-
-            function updateTable() { //Para agregar mas columnas a la tabla
-                if (fila1.length != arrayToDraw.length) {
-                    $("#hder").append("<th>Proximo C " + contClientes + "</th><th>Estado C " + contClientes +
-                        "</th>");
-                }
-                $("#tabla").append("<tr id=fila " + cantfila + "></tr>");
-                for (var i of draw) {
-                    $("#fila " + cantfila + "").append("<td> " + draw[i] + "</td>");
-                }
-            }
-
-            function truncateDecimal(numero) {
-                var with2Decimals = numero.toString().match(/^-?\d+(?:\.\d{0,2})?/)[0]
-                return with2Decimals;
-            }
 
             //GENERADORES DE TIMPOS
             function genTiempoLlenadaAcoplado(rnd) { //exponencial negativa -9 (llenar el acoplado de maiz)
@@ -451,7 +460,6 @@
                 $("#tabla").append(conTabla);
                 console.log(conTabla);
                 console.log("FIN DRAW");
-
             }
 
         });
