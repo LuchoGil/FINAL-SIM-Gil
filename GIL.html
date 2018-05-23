@@ -115,7 +115,7 @@
                         p.horaFin = finDesenganche;
                     }
                     // ---- No hay cola picadora para enganchar y hay cola transportador para desenganchar ->Desengancha transportador   
-                    else if (colaEnganchePicadoras.length == 0 &&  colaDesengancheTransportadores.length > 0) {
+                    else if (colaEnganchePicadoras.length == 0 && colaDesengancheTransportadores.length > 0) {
                         empleado1.estado = "Ocupado";
                         var t = colaDesengancheTransportadores.pop();
                         finDesenganche = reloj + tiempoDesenganche; //Enganche
@@ -215,9 +215,10 @@
             var urll = window.location.href;
 
             var header =
-                "<tr id='hder' class='cabeza'><th>Evento</th><th>Reloj</th><th>RND</th><th>Tiempo Llenada</th><th>Fin Llenada</th><th>P1 Estado</th><th>P1 Fin</th><th>P2 Estado</th><th>P2 Fin </th>    <th>A1 Estado</th> <th>A1 Fin</th> <th>A2 Estado</th> <th>A2 Fin</th> <th>A3 Estado</th> <th>A3 Fin</th> <th>A4 Estado</th> <th>A4 Fin</th>  <th>C Enganches</th> <th>C Desenganchs</th> <th>E1 Estado</th>  <th>Fin Enganche</th> <th>Fin Desenganche</th> <th>RND</th> <th>T Descarga</th> <th>Fin Descarga</th> <th>T1 Estado</th> <th>T1 Fin</th> <th>T2 Estado</th> <th>T2 Fin</th> <th>Cola Embutidora</th> <th>Emb Estado</th> <th>Cantidad Embutidos</th>"
+                "<tr id='hder' class='cabeza'><th>Evento</th><th>Reloj</th><th>RND</th><th>Tiempo Llenada</th><th>Fin Llenada</th><th>P1 Estado</th>< th > P1 Fin</th> <th>P2 Estado</th> <th>P2 Fin </th> <th>C Enganche P</th> <th>C Desenganche P</th> <th>A1 Estado</th> <th>A2 Estado</th> <th>A3 Estado</th> <th>A4 Estado</th> <th>A Libres</th> <th>A Llenos</th> <th>Empleado</th> <th>Fin Enganche</th> <th>Fin Desenganche</th> <th>RND</th> <th>T Descarga</th> <th>Fin Descarga</th> <th>T1 Estado</th> <th>T1 Fin</th> <th>T2 Estado</th> <th>T2 Fin</th> <th>C Enganche Transportadores</th> <th>C Desenganche Transportadores</th> <th>Cola Embutidora</th> <th>Emb Estado</th> <th>Cantidad Embutidos</th>";
             var aftheader = "</tr>";
 
+            //Botones
             $("#btn1").click(function () {
                 doSimulation();
             });
@@ -229,18 +230,20 @@
             });
 
             //FUNCIONES
-            function doSimulation() { //MOST IMPORTANT
+            function doSimulation() {
+
                 var minsSimular = $("#minutos").val();
                 var cantidad = $("#filas").val();
                 var desdeMin = $("#desde").val();
                 var contador = 0; //contador de filas
 
                 while (reloj <= minsSimular) {
+
                     proxEvento = colaEventos.pop(0);
                     reloj = proxEvento.hora;
-                    //ultimaFila = false;
 
-                    if (proxEvento.nombre == "Fin Llenada Acoplado") { //Como ignorar mayusculas?
+                    //ultimaFila = false;                    
+                    if (proxEvento.nombre == "Fin Llenada Acoplado") {
                         if (empleado1.estado == "Libre") {
                             empleado1.estado = "Ocupado";
                             finDesenganche = reloj + tiempoDesenganche; //Enganche
@@ -249,123 +252,89 @@
                             proxEvento.actor.estado = "Desenganchando " + proxEvento.actor.acoplado.numero;
                             proxEvento.actor.horaFin = finDesenganche;
                             proxEvento.actor.acoplado.estado = "Desenganchando";
-                        } else { //En esta zona puede llegar a haber problemas de prioridades, ya que siemrpe primero las picadoras
-                            colaDesenganche.push(proxEvento.actor);
-                            proxEvento.actor.estado = "Esperando Desenganche";
+                        } else {
+                            colaDesenganchePicadoras.push(proxEvento.actor);
+                            proxEvento.actor.estado = "Esperando Desenganche " + proxEvento.actor.acoplado.numero;
                             proxEvento.actor.horaFin = "-";
                             proxEvento.actor.acoplado.estado = "Esperando Desenganche";
                         }
-                    } else if (proxEvento.nombre == "Fin Desenganche Acoplado") {
-                        if (proxEvento.actor.constructor.name == "Picadora" && acopladosLibres.length > 0) {
-                            proxEvento.actor.acoplado.estado = "Lleno";
-                            acopladosLlenos.push(proxEvento.actor.acoplado);
-                            proxEvento.actor.acoplado = acopladosLibres.pop();
-                            proxEvento.actor.estado = "Enganchando " + proxEvento.actor.acoplado.numero;
-                            proxEvento.actor.horaFin = finEnganche;
-                            proxEvento.actor.acoplado.estado = "Enganchando";
+                    }
 
-
-                        } else if (proxEvento.actor.constructor.name == "Picadora" && acopladosLibres.length ==
-                            0) { //Si no hay acoplado disponibles para enganchar
-
-                            colaEnganche.push(proxEvento.actor);
-                            proxEvento.actor.estado = "Esperando Enganche";
+                    else if (proxEvento.nombre == "Fin Desenganche Acoplado") {
+                        if (proxEvento.actor.constructor.name == "Transportador") {
+                            proxEvento.actor.acoplado.estado = "Libre";
+                            acopladosLibres.push(proxEvento.actor.acoplado);
+                            proxEvento.actor.acoplado = null;
+                            proxEvento.actor.estado = "Libre";
                             proxEvento.actor.horaFin = "-";
+                            colaEngancheTransportadores.push(proxEvento.actor);
+                            empleado1.trabajar();
+                        }
+                        else {
                             proxEvento.actor.acoplado.estado = "Lleno";
                             acopladosLlenos.push(proxEvento.actor.acoplado);
                             proxEvento.actor.acoplado = null;
-                        } else if (proxEvento.actor.constructor.name == "Transportador" && (colaEnganche.length >
-                            0 ||
-                            colaDesenganche.length > 0)) { // Si se desengancha un Transportador y hay cola para enganchar o desenganchar
-                            colaEnganche.push(proxEvento.actor);
-                            proxEvento.actor.estado = "Esperando Enganche";
+                            proxEvento.actor.estado = "Libre";
                             proxEvento.actor.horaFin = "-";
-                            proxEvento.actor.acoplado.estado = "Vacio";
-                            acopladosLibres.push(proxEvento.actor.acoplado);
-                            proxEvento.actor.acoplado = null;
-                            if (colaEnganche.length > 0) {
-                                finEnganche = reloj + tiempoEnganche;
-                                var eventoAux = new Evento("Fin Enganche Acoplado", finEnganche, colaEnganche.pop());
-                                colaEventos.push(eventoAux);
-                            } else {
-
-                            }
-
-                        } else if (proxEvento.actor.constructor.name == "Transportador" && colaEnganche.length ==
-                            0 && colaDesenganche == 0 && acopladosLlenos.length > 0) { // Si se desengancha un Transportador y hay cola para enganchar o desenganchar  
-                            finEnganche = reloj + tiempoEnganche;
-                            var eventoAux = new Evento("Fin Enganche Acoplado", finEnganche, proxEvento.actor);
-                            agregarEvento(eventoAux);
-                            proxEvento.actor.estado = "Enganchando";
-                            proxEvento.actor.horaFin = finEnganche;
-                            proxEvento.actor.acoplado.estado = "Vacio";
-                            acopladosLibres.push(proxEvento.actor.acoplado);
-                            proxEvento.actor.acoplado = acopladosLlenos.pop();
-                            proxEvento.actor.acoplado.estado = "Enganchando";
-
-                        } else if (proxEvento.actor.constructor.name == "Transportador" &&
-                            colaDesenganche.length == 0 && acopladosLibres.length == 0 && acopladosLlenos.length ==
-                            0) {
-                            empleado1.estado = "Libre"; //UNICO CASO DONDE SE LIBERA EL EMPLEADO DESPUES DE DESENGANCHAR UN ACOPLADO
-                            colaEnganche.push(proxEvento.actor);
-                            proxEvento.actor.estado = "Esperando Enganche";
-                            proxEvento.actor.horaFin = "-";
-                            proxEvento.actor.acoplado.estado = "Vacio";
-                            acopladosLibres.push(proxEvento.actor.acoplado);
-                            proxEvento.actor.acoplado = null;
+                            colaEnganchePicadoras.push(proxEvento.actor);
+                            empleado1.trabajar();
                         }
 
                     } else if (proxEvento.nombre == "Fin Enganche Acoplado") {
-                        if (proxEvento.actor.type() == picadora) {
-                            rnd = Math.random;
-                            tiempoLlenada = genTiempoLlenadaAcoplado(rnd);
+                        if (proxEvento.actor.constructor.name == "Transportador") {
+                            proxEvento.actor.acoplado = "Enganchado";
+                            proxEvento.actor.estado = "Enganchado " + proxEvento.actor.acoplado.numero;
+                            empleado1.trabajar();
+                            if (colaEmbutidora.length == 0) {
+                                rndDescarga = Math.random;
+                                tiempoDescarga = genTiempoFinEmbutir(rndDescarga);
+                                finDescarga = reloj + tiempoDescarga;
+                                var eventoAux = new Evento("Fin Descarga Acoplado", finDescarga, proxEvento.actor);
+                                agregarEvento(eventoAux);
+                                proxEvento.actor.estado = "Descargando";
+                                proxEvento.actor.horaFin = finDescarga;
+                                proxEvento.actor.acoplado.estado = "Descargando";
+                                embutidora.estado = "Ocupada";
+                            }
+                        }
+                        else {
+                            proxEvento.actor.acoplado = "Enganchado";
+                            proxEvento.actor.estado = "Enganchado " + proxEvento.actor.acoplado.numero;
+                            empleado1.trabajar();
+                            rndLlenada = Math.random;
+                            tiempoLlenada = genTiempoLlenadaAcoplado(rndLlenada);
                             finLlenada = reloj + tiempoLlenada;
                             var eventoAux = new Evento("Fin Llenada Acoplado", finLlenada, proxEvento.actor);
                             agregarEvento(eventoAux);
-                            proxEvento.actor.estado = "Llenando";
+                            proxEvento.actor.estado = "Lllenando";
                             proxEvento.actor.horaFin = finLlenada;
                             proxEvento.actor.acoplado.estado = "Llenando";
-                            proxEvento.actor.horaFin = finLlenada;
-                            proxEvento.actor.acoplado.estado = "Llenando";
-                            if (colaDesenganche.length == 0 && colaEnganche.length == 0) {
-                                empleado1.estado = "Libre";
-                            }
-                        } else {
-                            rnd = Math.random;
-                            tiempoDescarga = genTiempoLlenadaAcoplado(rnd);
-                            finDescarga = reloj + tiempoDescarga;
-                            var eventoAux = new Evento("Fin Descarga Acoplado", finDescarga, proxEvento.actor);
-                            agregarEvento(eventoAux);
-                            proxEvento.actor.estado = "Descargando";
-                            proxEvento.actor.horaFin = finDescarga;
-                            proxEvento.actor.acoplado.estado = "Descargando";
-                            proxEvento.actor.horaFin = finLlenada;
-                            proxEvento.actor.acoplado.estado = "Descargando";
-                            if (colaDesenganche.length = 0 && colaEnganche.length == 0) {
-                                empleado1.estado = "Libre";
-                            }
                         }
 
-                    } else if (proxEvento.nombre == "Fin Descarga") { //Sumar uno al contador
-                        contadorEmbutidos++;
+                    } else if (proxEvento.nombre == "Fin Descarga") {
+                        contadorEmbutidos++; //Sumar uno al contador
                         if (colaEmbutidora.length == 0) {
                             embutidora1.estado = "Libre";
                         }
-                        if (colaDesenganche.length > 0 || colaEnganche.length > 0) {
-                            colaDesenganche.push(proxEvento.actor);
-                            proxEvento.actor.estado = "Esperando Desenganche";
-                            proxEvento.actor.horaFin = "-";
-                            proxEvento.actor.acoplado.estado = "Esperando Desenganche";
-
-                        } else if (colaDesenganche.length == 0 && colaEnganche.length == 0) {
-
-                            finDesenganche = reloj + tiempoDesenganche; //Enganche
-                            var eventoAux = new Evento("Fin Desenganche Acoplado", finDesenganche, proxEvento.actor);
+                        else {
+                            t = colaEmbutidora.pop();
+                            rndDescarga = Math.random;
+                            tiempoDescarga = genTiempoFinEmbutir(rndDescarga);
+                            finDescarga = reloj + tiempoDescarga;
+                            var eventoAux = new Evento("Fin Descarga Acoplado", finDescarga, t);
                             agregarEvento(eventoAux);
-                            proxEvento.actor.estado = "Desenganchando " + proxEvento.actor.acoplado.numero;
-                            proxEvento.actor.horaFin = finDesenganche;
-                            proxEvento.actor.acoplado.estado = "Desenganchando";
+                            t.estado = "Descargando";
+                            t.horaFin = finDescarga;
+                            t.acoplado.estado = "Descargando";
+                            embutidora.estado = "Ocupada";
                         }
+                        proxEvento.actor.estado = "Esperando Desenganche";
+                        proxEvento.actor.horaFin = "-"
+                        colaDesengancheTransportadores.push(proxEvento.actor);
+                        proxEvento.actor.acoplado.estado = "Lleno";
+                        acopladosLlenos.push(proxEvento.actor.acoplado)
+                        empleado1.trabajar();
+
                     } else if (proxEvento.nombre == "Inicio Simulacion") { //agrega los eventos que se pueden identificar al inicio a la lista de eventos
                         var eventosInicio = [];
                         for (var p of picadoras) {
@@ -381,11 +350,9 @@
                             }
                         }
                         agregarEvento(eventosInicio);
-
                     }
 
                     //Ultima parte del evento doSimulacion() 
-
                     if (reloj > 600) {
                         drawIteration();
                         break;
@@ -409,6 +376,7 @@
 
                 //Dibujar tabla al sair del while
                 drawTable();
+                $("#jose1").text(contadorEmbutidos);
             }
 
             function agregarEvento(eventos) {
@@ -620,13 +588,8 @@
     </div>
 
     <div id="box2">
-        <br> Clientes Atendidos:
+        <br> Cantiad de Embutidos:
         <b id="jose1"></b>
-        <br> Clientes perdidos por tardanza:
-        <b id="jose2"></b>
-        <br> Clientes perdidos por exceso:
-        <b id="jose3"></b>
-        <br>
     </div>
 
     <button type="button" class="btn" id="btn1">Simular</button>
