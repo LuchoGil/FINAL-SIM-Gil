@@ -277,7 +277,7 @@
 
                     } else if (proxEvento.nombre == "Fin Enganche Acoplado") {
                         if (proxEvento.actor.constructor.name == "Transportador") {
-                            proxEvento.actor.acoplado = "Enganchado";
+                            proxEvento.actor.acoplado.estado = "Enganchado";
                             proxEvento.actor.estado = "Enganchado " + proxEvento.actor.acoplado.numero;
                             empleado1.trabajar();
                             if (colaemutidora1.length == 0) {
@@ -293,7 +293,7 @@
                             }
                         }
                         else {
-                            proxEvento.actor.acoplado = "Enganchado";
+                            proxEvento.actor.acoplado.estado = "Enganchado";
                             proxEvento.actor.estado = "Enganchado " + proxEvento.actor.acoplado.numero;
                             empleado1.trabajar();
                             rndLlenada = Math.random();
