@@ -153,7 +153,7 @@
             var acoplado3 = new Acoplado(3, "Lleno", transportador1);
             var acoplado4 = new Acoplado(4, "Lleno", transportador2);
 
-            var acoplados = [acoplado1, acoplado2, acoplado3, acoplado4];
+            //  var acoplados = [acoplado1, acoplado2, acoplado3, acoplado4];
 
             var picadora1 = new Picadora(1, "Llenando", 3, acoplado1);
             var picadora2 = new Picadora(2, "Llenando", 5, acoplado2);
@@ -165,12 +165,12 @@
 
             var transportadores = [transportador1, transportador2];
 
-            var emutidora11 = new emutidora1(1, "Ocupada");
+            var embutidora1 = new emutidora1(1, "Ocupada");
 
             var empleado1 = new Empleado(1, "Libre");
 
             // Colas!!!!
-            var colaemutidora1 = [transportador2];
+            var colaEmbutidora = [transportador2];
             var colaEnganchePicadoras = [];
             var colaDesenganchePicadoras = [];
             var colaEngancheTransportadores = [];
@@ -203,7 +203,7 @@
             var proxEvento = new Evento("Inicio Simulacion", 0);
             colaEventos.push(proxEvento);
             
-            var arrayToDraw = [proxEvento.nombre, reloj, rndLlenada, tiempoLlenada, finLlenada, picadora1.estado, picadora1.horaFin, picadora2.estado, picadora2.horaFin, colaEnganchePicadoras.length, colaDesenganchePicadoras.length, acoplado1.estado, acoplado2.estado, acoplado3.estado, acoplado4.estado, acopladosLibres.length, acopladosLlenos.length, , empleado1.estado, finEnganche, finDesenganche, rndDescarga, tiempoDescarga, finDescarga, transportador1.estado, transportador1.horaFin, transportador2.estado, transportador2.horaFin, colaEngancheTransportadores, colaDesengancheTransportadores, colaemutidora1.length, emutidora11.estado, contadorEmbutidos]; //Array primera iteracion 28 columnas
+            var arrayToDraw = [proxEvento.nombre, reloj, rndLlenada, tiempoLlenada, finLlenada, picadora1.estado, picadora1.horaFin, picadora2.estado, picadora2.horaFin, colaEnganchePicadoras.length, colaDesenganchePicadoras.length, acoplado1.estado, acoplado2.estado, acoplado3.estado, acoplado4.estado, acopladosLibres.length, acopladosLlenos.length, , empleado1.estado, finEnganche, finDesenganche, rndDescarga, tiempoDescarga, finDescarga, transportador1.estado, transportador1.horaFin, transportador2.estado, transportador2.horaFin, colaEngancheTransportadores, colaDesengancheTransportadores, colaEmbutidora.length, embutidora1.estado, contadorEmbutidos]; //Array primera iteracion 28 columnas
             var draw = [0, 0, 99999, 99999, 99999, 99999, 99999, 99999, 1, 0, 0, 0, 0, 0];
             var drawArray = []; //Array a ser mostrado, es un array de arrays
 
@@ -280,7 +280,7 @@
                             proxEvento.actor.acoplado.estado = "Enganchado";
                             proxEvento.actor.estado = "Enganchado " + proxEvento.actor.acoplado.numero;
                             empleado1.trabajar();
-                            if (colaemutidora1.length == 0) {
+                            if (colaEmbutidora.length == 0) {
                                 rndDescarga = Math.random();
                                 tiempoDescarga = genTiempoFinEmbutir(rndDescarga);
                                 finDescarga = reloj + tiempoDescarga;
@@ -308,11 +308,11 @@
 
                     } else if (proxEvento.nombre == "Fin Descarga") {
                         contadorEmbutidos++; //Sumar uno al contador
-                        if (colaemutidora1.length == 0) {
-                            emutidora11.estado = "Libre";
+                        if (colaEmbutidora.length == 0) {
+                            emutidora1.estado = "Libre";
                         }
                         else {
-                            t = colaemutidora1.pop();
+                            t = colaEmbutidora.pop();
                             rndDescarga = Math.random();
                             tiempoDescarga = genTiempoFinEmbutir(rndDescarga);
                             finDescarga = reloj + tiempoDescarga;
@@ -321,7 +321,7 @@
                             t.estado = "Descargando";
                             t.horaFin = finDescarga;
                             t.acoplado.estado = "Descargando";
-                            emutidora11.estado = "Ocupada";
+                            embutidora1.estado = "Ocupada";
                         }
                         proxEvento.actor.estado = "Esperando Desenganche";
                         proxEvento.actor.horaFin = "-"
