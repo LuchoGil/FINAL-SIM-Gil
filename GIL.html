@@ -171,7 +171,7 @@
 
             var picadoras = [picadora1, picadora2];
 
-            var transportador1 = new Transportador(1, "Descargando", 4, acoplado3);
+            var transportador1 = new Transportador(1, "Descargando 3", 4, acoplado3);
             var transportador2 = new Transportador(2, "Esperando Descarga 4", "-", acoplado4);
 
             var transportadores = [transportador1, transportador2];
@@ -324,7 +324,7 @@
                             finLlenada = (reloj + tiempoLlenada).toPrecision(3);
                             var eventoAux = new Evento("Fin Llenada Acoplado", Number(finLlenada), proxEvento.actor);
                             agregarEvento(eventoAux);
-                            proxEvento.actor.estado = "Llenando";
+                            proxEvento.actor.estado = "Llenando "+ proxEvento.actor.acoplado.numero;
                             proxEvento.actor.horaFin = finLlenada;
                             proxEvento.actor.acoplado.estado = "Llenando";
 
@@ -350,7 +350,7 @@
                             finDescarga = reloj + tiempoDescarga;
                             var eventoAux = new Evento("Fin Descarga", finDescarga, t);
                             agregarEvento(eventoAux);
-                            t.estado = "Descargando";
+                            t.estado = "Descargando " + t.acoplado.numero;
                             t.horaFin = finDescarga;
                             t.acoplado.estado = "Descargando";
                             embutidora1.estado = "Ocupada";
