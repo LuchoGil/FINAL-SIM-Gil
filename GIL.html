@@ -150,7 +150,7 @@
 
             var acoplado1 = new Acoplado(1, "Llenando", picadora1); //Llenando, Lleno, Libre
             var acoplado2 = new Acoplado(2, "Llenando", picadora2);
-            var acoplado3 = new Acoplado(3, "Lleno", transportador1);
+            var acoplado3 = new Acoplado(3, "Descargando", transportador1);
             var acoplado4 = new Acoplado(4, "Lleno", transportador2);
 
             //  var acoplados = [acoplado1, acoplado2, acoplado3, acoplado4];
@@ -176,7 +176,7 @@
             var colaEngancheTransportadores = [];
             var colaDesengancheTransportadores = [];
             var acopladosLibres = [];
-            var acopladosLlenos = [];
+            var acopladosLlenos = [acoplado4];
 
             var contadorEmbutidos = 0; //Lo que se debemostrar al final
             var reloj = 0;
@@ -202,7 +202,7 @@
             // Evento queda inicio todo
             var proxEvento = new Evento("Inicio Simulacion", 0);
             colaEventos.push(proxEvento);
-            
+
             var arrayToDraw = [proxEvento.nombre, reloj, rndLlenada, tiempoLlenada, finLlenada, picadora1.estado, picadora1.horaFin, picadora2.estado, picadora2.horaFin, colaEnganchePicadoras.length, colaDesenganchePicadoras.length, acoplado1.estado, acoplado2.estado, acoplado3.estado, acoplado4.estado, acopladosLibres.length, acopladosLlenos.length, , empleado1.estado, finEnganche, finDesenganche, rndDescarga, tiempoDescarga, finDescarga, transportador1.estado, transportador1.horaFin, transportador2.estado, transportador2.horaFin, colaEngancheTransportadores, colaDesengancheTransportadores, colaEmbutidora.length, embutidora1.estado, contadorEmbutidos]; //Array primera iteracion 28 columnas
             var draw = [0, 0, 99999, 99999, 99999, 99999, 99999, 99999, 1, 0, 0, 0, 0, 0];
             var drawArray = []; //Array a ser mostrado, es un array de arrays
@@ -290,6 +290,12 @@
                                 proxEvento.actor.horaFin = finDescarga;
                                 proxEvento.actor.acoplado.estado = "Descargando";
                                 embutidora1.estado = "Ocupada";
+                            }
+                            else {
+                                colaEmbutidora.push(proxEvento.actor);
+                                proxEvento.actor.acoplado.estado = "Esperando Descarga";
+                                proxEvento.actor.estado = "Esperando Descarga " + proxEvento.actor.acoplado.numero;
+                                proxEvento.actor.horaFin = "-";
                             }
                         }
                         else {
@@ -452,34 +458,6 @@
                 }
             }
 
-            function defineEvent() {
-                var event = draw[0];
-                if (event == 0) {
-                    draw[0] = "Inicio Simulacion";
-                    return 1;
-                }
-                if (event == 1) {
-                    draw[0] = "Fin Simulación";
-                    return 1;
-                }
-                if (event == 4) {
-                    draw[0] = "Fin Llenada Acoplado";
-                    return 1;
-                }
-                if (event == 16) {
-                    draw[0] = "Fin Enganche Acoplado";
-                    return 1;
-                }
-                if (event == 17) {
-                    draw[0] = "Fin Desenganche Acoplado";
-                    return 1;
-                }
-                if (event == 20) {
-                    draw[0] = "Fin Descarga";
-                    return 1;
-                }
-            }
-
             function truncateDecimal(numero) {
                 var with2Decimals = numero.toString().match(/^-?\d+(?:\.\d{0,2})?/)[0]
                 return with2Decimals;
@@ -594,7 +572,7 @@
     <button type="button" class="btn" id="btn3">Ver Enunciado</button>
     <br>
     <div style="height: 750px; overflow-y: auto; width:100%;">
-        <table id="tabla" class="table table-hover table-mc-light-blue">            
+        <table id="tabla" class="table table-hover table-mc-light-blue">
         </table>
     </div>
 
